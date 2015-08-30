@@ -15,13 +15,13 @@ CND_PACKAGE_DIR_Debug=dist/Debug/WinAVR-Windows/package
 CND_PACKAGE_NAME_Debug=EV3-C.tar
 CND_PACKAGE_PATH_Debug=dist/Debug/WinAVR-Windows/package/EV3-C.tar
 # Release configuration
-CND_PLATFORM_Release=MinGW-Windows
-CND_ARTIFACT_DIR_Release=dist/Release/MinGW-Windows
+CND_PLATFORM_Release=WinAVR-Windows
+CND_ARTIFACT_DIR_Release=dist/Release/WinAVR-Windows
 CND_ARTIFACT_NAME_Release=libev3-c.a
-CND_ARTIFACT_PATH_Release=dist/Release/MinGW-Windows/libev3-c.a
-CND_PACKAGE_DIR_Release=dist/Release/MinGW-Windows/package
+CND_ARTIFACT_PATH_Release=dist/Release/WinAVR-Windows/libev3-c.a
+CND_PACKAGE_DIR_Release=dist/Release/WinAVR-Windows/package
 CND_PACKAGE_NAME_Release=EV3-C.tar
-CND_PACKAGE_PATH_Release=dist/Release/MinGW-Windows/package/EV3-C.tar
+CND_PACKAGE_PATH_Release=dist/Release/WinAVR-Windows/package/EV3-C.tar
 #
 # include compiler specific variables
 #

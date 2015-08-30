@@ -16,9 +16,9 @@
 //<editor-fold>
 char motorcommand[10];
 int pwmfile;
-bool motorinit = false;
+bool pwminit = false;
 
-void OutputInit()
+void PWMInit()
 {
     if((pwmfile = open(PWM_DEVICE_NAME, O_WRONLY)) == -1)
     {
@@ -29,23 +29,23 @@ void OutputInit()
     //Send
     motorcommand[0] = opPROGRAM_START;
     write(pwmfile, motorcommand, 2);
-    motorinit = true;
+    pwminit = true;
 }
 
-void OutputExit()
+void PWMExit()
 {
-    if(motorinit)
+    if(pwminit)
     {
         motorcommand[0] = opPROGRAM_STOP;
         write(pwmfile, motorcommand, 1);
         close(pwmfile);
-        motorinit=false;
+        pwminit=false;
     }
 }
 
 void SetMotorPolarity(char outputs, char polarity)
 {
-    if(motorinit)
+    if(pwminit)
     {
         motorcommand[0] = opOUTPUT_POLARITY;
         motorcommand[1] = outputs;
@@ -56,7 +56,7 @@ void SetMotorPolarity(char outputs, char polarity)
 
 void SetMotorType(char outputnumber, char type)                                 //LET OP: GEBRUIK NUMMER (1,2,3,4) NIET BIJV. "OUTPUT_A"
 {
-    if(motorinit)
+    if(pwminit)
     {
         if(outputnumber == 1 || outputnumber == 2 || outputnumber == 3 || outputnumber == 4)
         {
@@ -70,7 +70,7 @@ void SetMotorType(char outputnumber, char type)                                 
 
 void ResetTacho(char outputs)
 {
-    if(motorinit)
+    if(pwminit)
     {
         motorcommand[0] = opOUTPUT_RESET;
         motorcommand[1] = outputs;
@@ -80,7 +80,7 @@ void ResetTacho(char outputs)
 
 void ReadTacho(char outputnumber, char *speed, int *count)                      //LET OP: GEBRUIK NUMMER (1,2,3,4) NIET BIJV. "OUTPUT_A"
 {
-    if(motorinit)
+    if(pwminit)
     {
         if(outputnumber == 1 || outputnumber == 2 || outputnumber == 3 || outputnumber == 4)
         {
@@ -95,7 +95,7 @@ void ReadTacho(char outputnumber, char *speed, int *count)                      
 
 void WaitForMotor(char outputs)
 {
-    if(motorinit)
+    if(pwminit)
     {
         motorcommand[0] = opOUTPUT_READY;
         motorcommand[1] = outputs;
@@ -107,7 +107,7 @@ void OnFwd(char outputs, char power)                                            
 {
     if(power > 100) power = 100;
     if(power < -100) power = -100;
-    if(motorinit)
+    if(pwminit)
     {
         motorcommand[0] = opOUTPUT_POWER;
         motorcommand[1] = outputs;
@@ -123,7 +123,7 @@ void OnFwdSpeed(char outputs, char speed)
 {
     if(speed > 100) speed = 100;
     if(speed < -100) speed = -100;
-    if(motorinit)
+    if(pwminit)
     {
         motorcommand[0] = opOUTPUT_SPEED;
         motorcommand[1] = outputs;
@@ -137,7 +137,9 @@ void OnFwdSpeed(char outputs, char speed)
 
 void OnFwdSync(char outputs, char speed, short turn)
 {
-    if(motorinit)
+    if(speed > 100) speed = 100;
+    if(speed < -100) speed = -100;
+    if(pwminit)
     {
         motorcommand[0] = opOUTPUT_STEP_SYNC;
         motorcommand[1] = outputs;
@@ -151,7 +153,7 @@ void OnFwdSync(char outputs, char speed, short turn)
 
 void Off(char outputs, char mode)                                               //Needs to be tested
 {
-    if(motorinit)
+    if(pwminit)
     {
         motorcommand[0] = opOUTPUT_STOP;
         motorcommand[1] = outputs;
@@ -177,7 +179,7 @@ bool analoginit = false;
 bool uartinit = false;
 bool i2cinit = false;
 
-void InitAnalog()
+void AnalogInit()
 {
     if(analoginit == false)
     {
@@ -197,7 +199,23 @@ void InitAnalog()
     }
 }
 
-void InitUART()
+void AnalogExit()
+{
+    if(analoginit)
+    {
+        int error;
+        printf("Closing analog device...\n");
+        error = munmap(panalog, sizeof(ANALOG));
+        if(error == -1) printf("Failed to unmap analog device\n");
+        else printf("Analog device unmapped.\n");
+        error = close(analogfile);
+        if(error == -1) printf("Failed to close analog device");
+        else printf("Analog device closed.\n");
+        analoginit = false;
+    }
+}
+
+void UARTInit()
 {
     if(uartinit == false)
     {
@@ -206,8 +224,8 @@ void InitUART()
 		printf("Failed to open UART device\n");
 		exit(-1); 
 	}
-	panalog  =  (UART*)mmap(0, sizeof(UART), PROT_READ | PROT_WRITE, MAP_FILE | MAP_SHARED, uartfile, 0);
-	if (panalog == MAP_FAILED)
+	puart  =  (UART*)mmap(0, sizeof(UART), PROT_READ | PROT_WRITE, MAP_FILE | MAP_SHARED, uartfile, 0);
+	if (puart == MAP_FAILED)
 	{
 		printf("Failed to map UART device\n");
 		exit(-1);
@@ -217,7 +235,20 @@ void InitUART()
     }
 }
 
-void InitI2C()
+void UARTExit()
+{
+        int error;
+        printf("Closing UART device...\n");
+        error = munmap(puart, sizeof(UART));
+        if(error == -1) printf("Failed to unmap UART device\n");
+        else printf("UART device unmapped.\n");
+        error = close(uartfile);
+        if(error == -1) printf("Failed to close UART device");
+        else printf("UART device closed.\n");
+        uartinit=false;
+}
+
+void I2CInit()
 {
     if(i2cinit == false)
     {
@@ -235,5 +266,18 @@ void InitI2C()
 	printf("I2C device ready\n");
         i2cinit = true;
     }
+}
+
+void I2CExit()
+{
+        int error;
+        printf("Closing I2C device...\n");
+        error = munmap(pi2c, sizeof(IIC));
+        if(error == -1) printf("Failed to unmap I2C device\n");
+        else printf("I2C device unmapped.\n");
+        error = close(i2cfile);
+        if(error == -1) printf("Failed to close I2C device");
+        else printf("I2C device closed.\n");
+        uartinit=false;
 }
 //</editor-fold>

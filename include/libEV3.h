@@ -126,9 +126,13 @@ extern "C" {
     void WaitForMotor(char outputs);
     void ResetTacho(char outputs);
     void ReadTacho(char outputnumber, char *speed, int *count);
-    void InitAnalog();
-    void InitUART();
-    void InitI2C();
+    void AnalogInit();
+    void AnalogExit();
+    void UARTInit();
+    void UARTExit();
+    void I2CInit();
+    void I2CExit();
+    int close();
 #ifdef	__cplusplus
 }
 #endif
