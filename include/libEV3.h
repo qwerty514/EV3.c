@@ -106,10 +106,10 @@ typedef unsigned char byte;
 #define S2 0x01
 #define S3 0x02
 #define S4 0x03
-extern int *psensor1;
-extern int *psensor2;
-extern int *psensor3;
-extern int *psensor4;
+extern void *psensor1;
+extern void *psensor2;
+extern void *psensor3;
+extern void *psensor4;
 //</editor-fold>
 
 #ifdef	__cplusplus
@@ -132,7 +132,9 @@ extern "C" {
     void UARTExit();
     void I2CInit();
     void I2CExit();
+    //For some reason this is needed.
     int close();
+    int write();
 #ifdef	__cplusplus
 }
 #endif

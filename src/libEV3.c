@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <string.h>
 #include <sys/mman.h>
 #include "../include/libEV3.h"
 
@@ -54,11 +55,11 @@ void SetMotorPolarity(char outputs, char polarity)
     }
 }
 
-void SetMotorType(char outputnumber, char type)                                 //LET OP: GEBRUIK NUMMER (1,2,3,4) NIET BIJV. "OUTPUT_A"
+void SetMotorType(char outputnumber, char type)                                 //LET OP: GEBRUIK NUMMER (0,1,2,3) NIET BIJV. "OUTPUT_A"
 {
     if(pwminit)
     {
-        if(outputnumber == 1 || outputnumber == 2 || outputnumber == 3 || outputnumber == 4)
+        if(outputnumber >= 0 && outputnumber <=3)
         {
             motorcommand[0] = opOUTPUT_SET_TYPE;
             motorcommand[1] = outputnumber;
@@ -78,16 +79,16 @@ void ResetTacho(char outputs)
     }
 }
 
-void ReadTacho(char outputnumber, char *speed, int *count)                      //LET OP: GEBRUIK NUMMER (1,2,3,4) NIET BIJV. "OUTPUT_A"
+void ReadTacho(char outputnumber, char *speed, int *count)                      //LET OP: GEBRUIK NUMMER (0,1,2,3) NIET BIJV. "OUTPUT_A"
 {
     if(pwminit)
     {
-        if(outputnumber == 1 || outputnumber == 2 || outputnumber == 3 || outputnumber == 4)
+        if(outputnumber >= 0 && outputnumber <=3)
         {
             motorcommand[0] = opOUTPUT_READ;
             motorcommand[1] = outputnumber;
-            motorcommand[2] = speed;
-            motorcommand[6] = count;
+            memcpy(motorcommand+2, &speed, sizeof(speed));
+            memcpy(motorcommand+6, &count, sizeof(count));
             write(pwmfile, motorcommand, 4);
         }
     }
@@ -145,7 +146,11 @@ void OnFwdSync(char outputs, char speed, short turn)
         motorcommand[1] = outputs;
         motorcommand[2] = speed;
         motorcommand[3] = turn;
-        motorcommand[5] = (int)0;
+        memcpy(motorcommand+3, &turn, sizeof(turn));
+        motorcommand[5] = 0;
+        motorcommand[6] = 0;
+        motorcommand[7] = 0;
+        motorcommand[8] = 0;
         motorcommand[9] = 0;
         write(pwmfile, motorcommand, 10);
     }
@@ -165,10 +170,10 @@ void Off(char outputs, char mode)                                               
 
 //Sensor stuffs
 //<editor-fold>
-int *psensor1;
-int *psensor2;
-int *psensor3;
-int *psensor4;
+void *psensor1;
+void *psensor2;
+void *psensor3;
+void *psensor4;
 int analogfile;
 int uartfile;
 int i2cfile;
@@ -279,5 +284,49 @@ void I2CExit()
         if(error == -1) printf("Failed to close I2C device");
         else printf("I2C device closed.\n");
         uartinit=false;
+}
+
+void SetSensorNXTLight(char port)                                                  //NXT light sensor, EV3 only has coloursensor
+{
+    switch(port)
+    {
+        case S1:
+            psensor1 = (unsigned char*)&panalog->Pin1[port][panalog->Actual[port]];
+            break;
+        case S2:
+            psensor2 = (unsigned char*)&panalog->Pin1[port][panalog->Actual[port]];
+            break;
+        case S3:
+            psensor3 = (unsigned char*)&panalog->Pin1[port][panalog->Actual[port]];
+            break;
+        case S4:
+            psensor4 = (unsigned char*)&panalog->Pin1[port][panalog->Actual[port]];
+            break;
+        default:
+            printf("No valid port number! (%d)\n", port);
+            break;
+    }
+}
+
+void SetSensorTouch(char port)
+{
+    switch(port)
+    {
+        case S1:
+            psensor1 = (unsigned char*)&panalog->Pin1[port][panalog->Actual[port]];
+            break;
+        case S2:
+            psensor2 = (unsigned char*)&panalog->Pin1[port][panalog->Actual[port]];
+            break;
+        case S3:
+            psensor3 = (unsigned char*)&panalog->Pin1[port][panalog->Actual[port]];
+            break;
+        case S4:
+            psensor4 = (unsigned char*)&panalog->Pin1[port][panalog->Actual[port]];
+            break;
+        default:
+            printf("No valid port number! (%d)\n", port);
+            break;
+    }
 }
 //</editor-fold>
