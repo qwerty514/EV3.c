@@ -330,3 +330,20 @@ void SetSensorTouch(char port)
     }
 }
 //</editor-fold>
+
+//Global stuffs
+void EV3Init()
+{
+    PWMInit();
+    AnalogInit();
+    UARTInit();
+    I2CInit();
+}
+
+void EV3Exit()
+{
+    PWMExit();
+    AnalogExit();
+    UARTInit();
+    I2CInit();
+}

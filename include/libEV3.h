@@ -132,6 +132,8 @@ extern "C" {
     void UARTExit();
     void I2CInit();
     void I2CExit();
+    void EV3Init();
+    void EV3Exit();
     //For some reason this is needed.
     int close();
     int write();
