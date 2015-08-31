@@ -134,9 +134,17 @@ extern "C" {
     void I2CExit();
     void EV3Init();
     void EV3Exit();
-    //For some reason this is needed.
-    int close();
+    void SetSensorTouch(char port);
+    void SetSensorGyro(char port);
+    void SetSensorUS(char port);
+    void SetSensorColour(char port);
+    void SetSensorNXTTouch(char port);
+    void SetSensorNXTUS(char port);
+    void SetSensorNXTLight(char port);
+    //For some reason this is needed:
+    int open();
     int write();
+    int close();
 #ifdef	__cplusplus
 }
 #endif

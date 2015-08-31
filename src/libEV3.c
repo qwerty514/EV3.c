@@ -286,21 +286,21 @@ void I2CExit()
         uartinit=false;
 }
 
-void SetSensorNXTLight(char port)                                                  //NXT light sensor, EV3 only has coloursensor
+void SetSensorTouch(char port)
 {
     switch(port)
     {
         case S1:
-            psensor1 = (unsigned char*)&panalog->Pin1[port][panalog->Actual[port]];
+            psensor1 = (unsigned char*)&(panalog->Pin1[port][panalog->Actual[port]]);
             break;
         case S2:
-            psensor2 = (unsigned char*)&panalog->Pin1[port][panalog->Actual[port]];
+            psensor2 = (unsigned char*)&(panalog->Pin1[port][panalog->Actual[port]]);
             break;
         case S3:
-            psensor3 = (unsigned char*)&panalog->Pin1[port][panalog->Actual[port]];
+            psensor3 = (unsigned char*)&(panalog->Pin1[port][panalog->Actual[port]]);
             break;
         case S4:
-            psensor4 = (unsigned char*)&panalog->Pin1[port][panalog->Actual[port]];
+            psensor4 = (unsigned char*)&(panalog->Pin1[port][panalog->Actual[port]]);
             break;
         default:
             printf("No valid port number! (%d)\n", port);
@@ -308,21 +308,131 @@ void SetSensorNXTLight(char port)                                               
     }
 }
 
-void SetSensorTouch(char port)
+void SetSensorGyro(char port)
 {
     switch(port)
     {
         case S1:
-            psensor1 = (unsigned char*)&panalog->Pin1[port][panalog->Actual[port]];
+            psensor1 = (unsigned char*)&(puart->Raw[port][puart->Actual[port]][0]);
             break;
         case S2:
-            psensor2 = (unsigned char*)&panalog->Pin1[port][panalog->Actual[port]];
+            psensor2 = (unsigned char*)&(puart->Raw[port][puart->Actual[port]][0]);
             break;
         case S3:
-            psensor3 = (unsigned char*)&panalog->Pin1[port][panalog->Actual[port]];
+            psensor3 = (unsigned char*)&(puart->Raw[port][puart->Actual[port]][0]);
             break;
         case S4:
-            psensor4 = (unsigned char*)&panalog->Pin1[port][panalog->Actual[port]];
+            psensor4 = (unsigned char*)&(puart->Raw[port][puart->Actual[port]][0]);
+            break;
+        default:
+            printf("No valid port number! (%d)\n", port);
+            break;
+    }
+}
+
+void SetSensorUS(char port)
+{
+    switch(port)
+    {
+        case S1:
+            psensor1 = (unsigned char*)&(puart->Raw[port][puart->Actual[port]][0]);
+            break;
+        case S2:
+            psensor2 = (unsigned char*)&(puart->Raw[port][puart->Actual[port]][0]);
+            break;
+        case S3:
+            psensor3 = (unsigned char*)&(puart->Raw[port][puart->Actual[port]][0]);
+            break;
+        case S4:
+            psensor4 = (unsigned char*)&(puart->Raw[port][puart->Actual[port]][0]);
+            break;
+        default:
+            printf("No valid port number! (%d)\n", port);
+            break;
+    }
+}
+
+void SetSensorColour(char port)
+{
+    switch(port)
+    {
+        case S1:
+            psensor1 = (unsigned char*)&(puart->Raw[port][puart->Actual[port]][0]);
+            break;
+        case S2:
+            psensor2 = (unsigned char*)&(puart->Raw[port][puart->Actual[port]][0]);
+            break;
+        case S3:
+            psensor3 = (unsigned char*)&(puart->Raw[port][puart->Actual[port]][0]);
+            break;
+        case S4:
+            psensor4 = (unsigned char*)&(puart->Raw[port][puart->Actual[port]][0]);
+            break;
+        default:
+            printf("No valid port number! (%d)\n", port);
+            break;
+    }
+}
+
+void SetSensorNXTTouch(char port)
+{
+    switch(port)
+    {
+        case S1:
+            psensor1 = (unsigned char*)&(panalog->Pin1[port][panalog->Actual[port]]);
+            break;
+        case S2:
+            psensor2 = (unsigned char*)&(panalog->Pin1[port][panalog->Actual[port]]);
+            break;
+        case S3:
+            psensor3 = (unsigned char*)&(panalog->Pin1[port][panalog->Actual[port]]);
+            break;
+        case S4:
+            psensor4 = (unsigned char*)&(panalog->Pin1[port][panalog->Actual[port]]);
+            break;
+        default:
+            printf("No valid port number! (%d)\n", port);
+            break;
+    }
+}
+
+void SetSensorNXTUS(char port)
+{
+    switch(port)
+    {
+        case S1:
+            psensor1 = (unsigned char*)&(pi2c->Raw[port][puart->Actual[port]][0]);
+            break;
+        case S2:
+            psensor2 = (unsigned char*)&(pi2c->Raw[port][puart->Actual[port]][0]);
+            break;
+        case S3:
+            psensor3 = (unsigned char*)&(pi2c->Raw[port][puart->Actual[port]][0]);
+            break;
+        case S4:
+            psensor4 = (unsigned char*)&(pi2c->Raw[port][puart->Actual[port]][0]);
+            break;
+        default:
+            printf("No valid port number! (%d)\n", port);
+            break;
+    }
+}
+
+void SetSensorNXTLight(char port)                                               //NXT light sensor, EV3 only has coloursensor
+{
+    switch(port)
+    {
+        case S1:
+            psensor1 = (unsigned char*)&(panalog->Pin1[port][panalog->Actual[port]]);
+            break;
+        case S2:
+            psensor2 = (unsigned char*)&(panalog->Pin1[port][panalog->Actual[port]]);
+            break;
+        case S3:
+            psensor3 = (unsigned char*)&(panalog->Pin1[port][panalog->Actual[port]]);
+            break;
+        case S4:
+            psensor4 = (unsigned char*)&(panalog->Pin1[port][panalog->Actual[port]]);
             break;
         default:
             printf("No valid port number! (%d)\n", port);
