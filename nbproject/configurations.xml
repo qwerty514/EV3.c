@@ -5,6 +5,8 @@
                    displayName="Header Files"
                    projectFiles="true">
       <itemPath>include/bytecodes.h</itemPath>
+      <itemPath>include/c_ui.h</itemPath>
+      <itemPath>include/d_lcd.h</itemPath>
       <itemPath>include/libEV3.h</itemPath>
       <itemPath>include/lms2012.h</itemPath>
       <itemPath>include/lmstypes.h</itemPath>
@@ -12,10 +14,20 @@
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
                    projectFiles="true">
+      <itemPath>res/arrow_icons.xbm</itemPath>
+      <itemPath>res/large_font.xbm</itemPath>
+      <itemPath>res/large_icons.xbm</itemPath>
+      <itemPath>res/menu_icons.xbm</itemPath>
+      <itemPath>res/normal_font.xbm</itemPath>
+      <itemPath>res/normal_icons.xbm</itemPath>
+      <itemPath>res/small_font.xbm</itemPath>
+      <itemPath>res/small_icons.xbm</itemPath>
+      <itemPath>res/tiny_font.xbm</itemPath>
     </logicalFolder>
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
+      <itemPath>lib/d_lcd.c</itemPath>
       <itemPath>src/libEV3.c</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
@@ -30,6 +42,9 @@
       <itemPath>Makefile</itemPath>
     </logicalFolder>
   </logicalFolder>
+  <sourceRootList>
+    <Elem>res</Elem>
+  </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
     <conf name="Debug" type="3">
@@ -40,6 +55,12 @@
       </toolsSet>
       <compileType>
         <cTool>
+          <incDir>
+            <pElem>include</pElem>
+            <pElem>lib</pElem>
+            <pElem>res</pElem>
+            <pElem>src</pElem>
+          </incDir>
           <preprocessorList>
             <Elem>DEBUG</Elem>
           </preprocessorList>
@@ -54,11 +75,35 @@
       </compileType>
       <item path="include/bytecodes.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="include/c_ui.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/d_lcd.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/libEV3.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/lms2012.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/lmstypes.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="lib/d_lcd.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="res/arrow_icons.xbm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/large_font.xbm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/large_icons.xbm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/menu_icons.xbm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/normal_font.xbm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/normal_icons.xbm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/small_font.xbm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/small_icons.xbm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/tiny_font.xbm" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/libEV3.c" ex="false" tool="0" flavor2="0">
       </item>
@@ -72,6 +117,12 @@
       <compileType>
         <cTool>
           <developmentMode>5</developmentMode>
+          <incDir>
+            <pElem>include</pElem>
+            <pElem>lib</pElem>
+            <pElem>res</pElem>
+            <pElem>src</pElem>
+          </incDir>
           <preprocessorList>
             <Elem>RELEASE</Elem>
           </preprocessorList>
@@ -93,11 +144,35 @@
       </compileType>
       <item path="include/bytecodes.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="include/c_ui.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/d_lcd.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/libEV3.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/lms2012.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/lmstypes.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="lib/d_lcd.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="res/arrow_icons.xbm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/large_font.xbm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/large_icons.xbm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/menu_icons.xbm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/normal_font.xbm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/normal_icons.xbm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/small_font.xbm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/small_icons.xbm" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/tiny_font.xbm" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/libEV3.c" ex="false" tool="0" flavor2="0">
       </item>

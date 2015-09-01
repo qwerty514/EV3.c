@@ -112,6 +112,10 @@ extern void *psensor3;
 extern void *psensor4;
 //</editor-fold>
 
+//LCD stuffs
+extern LCD lcd;
+extern char lcdupdate;
+
 #ifdef	__cplusplus
 extern "C" {
 #endif
@@ -141,10 +145,6 @@ extern "C" {
     void SetSensorNXTTouch(char port);
     void SetSensorNXTUS(char port);
     void SetSensorNXTLight(char port);
-    //For some reason this is needed:
-    int open();
-    int write();
-    int close();
 #ifdef	__cplusplus
 }
 #endif

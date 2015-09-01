@@ -11,13 +11,15 @@
 #include <stdbool.h>
 #include <string.h>
 #include <sys/mman.h>
-#include "../include/libEV3.h"
+#include <pthread.h>
+#include "libEV3.h"
+#include "d_lcd.h"
 
 //Motor stuffs
 //<editor-fold>
 char motorcommand[10];
 int pwmfile;
-bool pwminit = false;
+char pwminit = false;
 
 void PWMInit()
 {
@@ -180,9 +182,9 @@ int i2cfile;
 ANALOG *panalog;
 UART *puart;
 IIC *pi2c;
-bool analoginit = false;
-bool uartinit = false;
-bool i2cinit = false;
+char analoginit = false;
+char uartinit = false;
+char i2cinit = false;
 
 void AnalogInit()
 {
@@ -441,6 +443,43 @@ void SetSensorNXTLight(char port)                                               
 }
 //</editor-fold>
 
+//LCD stuffs
+//<editor-fold>
+LCD lcd;
+char lcdupdate = false;
+void TextOut(int x, int y, char *str)
+{
+    dLcdDrawText(lcd.Lcd, FG_COLOR, x, y, NORMAL_FONT,(signed char*)str);
+    if(lcdupdate == false) dLcdUpdate(&lcd);
+}
+
+void ClearScreen()
+{
+    LCDClear(lcd.Lcd);
+    if(lcdupdate == false) dLcdUpdate(&lcd);
+}
+
+void UpdateScreen()
+{
+    dLcdUpdate(&lcd);
+}
+
+void NumOut(int x, int y, int num)
+{
+    char str[2];
+    sprintf(str, "%d", num);
+    dLcdDrawText(lcd.Lcd, FG_COLOR, x, y, NORMAL_FONT, (signed char *)str);
+    if(lcdupdate == false) dLcdUpdate(&lcd);
+}
+
+void TextNumOut(int x, int y, char str[100], int num)
+{
+    sprintf(str+strlen(str), "%s%d", str, num);
+    dLcdDrawText(lcd.Lcd, FG_COLOR, x, y, NORMAL_FONT, (signed char *)str);
+    if(lcdupdate == false) dLcdUpdate(&lcd);
+}
+//</editor-fold>
+
 //Global stuffs
 void EV3Init()
 {
@@ -448,6 +487,7 @@ void EV3Init()
     AnalogInit();
     UARTInit();
     I2CInit();
+    dLcdInit(lcd.Lcd);
 }
 
 void EV3Exit()
@@ -456,4 +496,5 @@ void EV3Exit()
     AnalogExit();
     UARTInit();
     I2CInit();
+    dLcdExit();
 }
