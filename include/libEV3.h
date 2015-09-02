@@ -116,6 +116,11 @@ extern void *psensor4;
 extern LCD lcd;
 extern char lcdupdate;
 
+//Button stuffs
+#define PRESSED 1
+#define
+extern UI *pui;
+
 #ifdef	__cplusplus
 extern "C" {
 #endif
@@ -136,8 +141,6 @@ extern "C" {
     void UARTExit();
     void I2CInit();
     void I2CExit();
-    void EV3Init();
-    void EV3Exit();
     void SetSensorTouch(char port);
     void SetSensorGyro(char port);
     void SetSensorUS(char port);
@@ -145,6 +148,16 @@ extern "C" {
     void SetSensorNXTTouch(char port);
     void SetSensorNXTUS(char port);
     void SetSensorNXTLight(char port);
+    void UIInit();
+    void UIExit();
+    char UpButtonState();
+    char EnterButtonState();
+    char DownButtonState();
+    char RightButtonState();
+    char LeftButtonState();
+    char BackButtonState();
+    void EV3Init();
+    void EV3Exit();
 #ifdef	__cplusplus
 }
 #endif

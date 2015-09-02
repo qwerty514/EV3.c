@@ -21,6 +21,12 @@ char motorcommand[10];
 int pwmfile;
 char pwminit = false;
 
+void PWMDevInitErr()
+{
+    printf("The controller device for motors is not initialized.\n"
+           "Don't forget to use \"EV3Init();\" and \"EV3Exit();\".\n");
+}
+
 void PWMInit()
 {
     if((pwmfile = open(PWM_DEVICE_NAME, O_WRONLY)) == -1)
@@ -55,6 +61,7 @@ void SetMotorPolarity(char outputs, char polarity)
         motorcommand[2] = polarity;
         write(pwmfile, motorcommand, 3);
     }
+    else PWMDevInitErr();
 }
 
 void SetMotorType(char outputnumber, char type)                                 //LET OP: GEBRUIK NUMMER (0,1,2,3) NIET BIJV. "OUTPUT_A"
@@ -69,6 +76,7 @@ void SetMotorType(char outputnumber, char type)                                 
             write(pwmfile, motorcommand, 3);
         }
     }
+    else PWMDevInitErr();
 }
 
 void ResetTacho(char outputs)
@@ -79,6 +87,7 @@ void ResetTacho(char outputs)
         motorcommand[1] = outputs;
         write(pwmfile, motorcommand, 2);
     }
+    else PWMDevInitErr();
 }
 
 void ReadTacho(char outputnumber, char *speed, int *count)                      //LET OP: GEBRUIK NUMMER (0,1,2,3) NIET BIJV. "OUTPUT_A"
@@ -94,6 +103,7 @@ void ReadTacho(char outputnumber, char *speed, int *count)                      
             write(pwmfile, motorcommand, 4);
         }
     }
+    else PWMDevInitErr();
 }
 
 void WaitForMotor(char outputs)
@@ -104,6 +114,7 @@ void WaitForMotor(char outputs)
         motorcommand[1] = outputs;
         write(pwmfile, motorcommand, 2);
     }
+    else PWMDevInitErr();
 }
 
 void OnFwd(char outputs, char power)                                            //Which name? OnFwd? OnPwr? SetPwr? Pwr?
@@ -120,6 +131,7 @@ void OnFwd(char outputs, char power)                                            
         motorcommand[1] = outputs;
         write(pwmfile, motorcommand, 2);
     }
+    else PWMDevInitErr();
 }
 
 void OnFwdSpeed(char outputs, char speed)
@@ -136,6 +148,7 @@ void OnFwdSpeed(char outputs, char speed)
         motorcommand[1] = outputs;
         write(pwmfile, motorcommand, 2);
     }
+    else PWMDevInitErr();
 }
 
 void OnFwdSync(char outputs, char speed, short turn)
@@ -156,17 +169,31 @@ void OnFwdSync(char outputs, char speed, short turn)
         motorcommand[9] = 0;
         write(pwmfile, motorcommand, 10);
     }
+    else PWMDevInitErr();
 }
 
-void Off(char outputs, char mode)                                               //Needs to be tested
+void Off(char outputs)                                                          //Needs to be tested
 {
     if(pwminit)
     {
         motorcommand[0] = opOUTPUT_STOP;
         motorcommand[1] = outputs;
-        motorcommand[2] = mode;
+        motorcommand[2] = BRAKE;
         write(pwmfile, motorcommand, 3);
     }
+    else PWMDevInitErr();
+}
+
+void Float(char outputs)
+{
+    if(pwminit)
+    {
+        motorcommand[0] = opOUTPUT_STOP;
+        motorcommand[1] = outputs;
+        motorcommand[2] = FLOAT;
+        write(pwmfile, motorcommand, 3);
+    }
+    else PWMDevInitErr();
 }
 //</editor-fold>
 
@@ -185,6 +212,12 @@ IIC *pi2c;
 char analoginit = false;
 char uartinit = false;
 char i2cinit = false;
+
+void SensorDevInitErr()
+{
+    printf("The communication device for this sensor is not initialized.\n"
+           "Don't forget to use \"EV3Init();\" and \"EV3Exit();\".\n");
+}
 
 void AnalogInit()
 {
@@ -290,156 +323,269 @@ void I2CExit()
 
 void SetSensorTouch(char port)
 {
-    switch(port)
+    if(analoginit)
     {
-        case S1:
-            psensor1 = (unsigned char*)&(panalog->Pin1[port][panalog->Actual[port]]);
-            break;
-        case S2:
-            psensor2 = (unsigned char*)&(panalog->Pin1[port][panalog->Actual[port]]);
-            break;
-        case S3:
-            psensor3 = (unsigned char*)&(panalog->Pin1[port][panalog->Actual[port]]);
-            break;
-        case S4:
-            psensor4 = (unsigned char*)&(panalog->Pin1[port][panalog->Actual[port]]);
-            break;
-        default:
-            printf("No valid port number! (%d)\n", port);
-            break;
+        switch(port)
+        {
+            case S1:
+                psensor1 = (unsigned char*)&(panalog->Pin1[port][panalog->Actual[port]]);
+                break;
+            case S2:
+                psensor2 = (unsigned char*)&(panalog->Pin1[port][panalog->Actual[port]]);
+                break;
+            case S3:
+                psensor3 = (unsigned char*)&(panalog->Pin1[port][panalog->Actual[port]]);
+                break;
+            case S4:
+                psensor4 = (unsigned char*)&(panalog->Pin1[port][panalog->Actual[port]]);
+                break;
+            default:
+                printf("No valid port number! (%d)\n", port);
+                break;
+        }
     }
+    else SensorDevInitErr();
 }
 
 void SetSensorGyro(char port)
 {
-    switch(port)
+    if(uartinit)
     {
-        case S1:
-            psensor1 = (unsigned char*)&(puart->Raw[port][puart->Actual[port]][0]);
-            break;
-        case S2:
-            psensor2 = (unsigned char*)&(puart->Raw[port][puart->Actual[port]][0]);
-            break;
-        case S3:
-            psensor3 = (unsigned char*)&(puart->Raw[port][puart->Actual[port]][0]);
-            break;
-        case S4:
-            psensor4 = (unsigned char*)&(puart->Raw[port][puart->Actual[port]][0]);
-            break;
-        default:
-            printf("No valid port number! (%d)\n", port);
-            break;
+        switch(port)
+        {
+            case S1:
+                psensor1 = (unsigned char*)&(puart->Raw[port][puart->Actual[port]][0]);
+                break;
+            case S2:
+                psensor2 = (unsigned char*)&(puart->Raw[port][puart->Actual[port]][0]);
+                break;
+            case S3:
+                psensor3 = (unsigned char*)&(puart->Raw[port][puart->Actual[port]][0]);
+                break;
+            case S4:
+                psensor4 = (unsigned char*)&(puart->Raw[port][puart->Actual[port]][0]);
+                break;
+            default:
+                printf("No valid port number! (%d)\n", port);
+                break;
+        }
     }
+    else SensorDevInitErr();
 }
 
 void SetSensorUS(char port)
 {
-    switch(port)
+    if(uartinit)
     {
-        case S1:
-            psensor1 = (unsigned char*)&(puart->Raw[port][puart->Actual[port]][0]);
-            break;
-        case S2:
-            psensor2 = (unsigned char*)&(puart->Raw[port][puart->Actual[port]][0]);
-            break;
-        case S3:
-            psensor3 = (unsigned char*)&(puart->Raw[port][puart->Actual[port]][0]);
-            break;
-        case S4:
-            psensor4 = (unsigned char*)&(puart->Raw[port][puart->Actual[port]][0]);
-            break;
-        default:
-            printf("No valid port number! (%d)\n", port);
-            break;
+        switch(port)
+        {
+            case S1:
+                psensor1 = (unsigned char*)&(puart->Raw[port][puart->Actual[port]][0]);
+                break;
+            case S2:
+                psensor2 = (unsigned char*)&(puart->Raw[port][puart->Actual[port]][0]);
+                break;
+            case S3:
+                psensor3 = (unsigned char*)&(puart->Raw[port][puart->Actual[port]][0]);
+                break;
+            case S4:
+                psensor4 = (unsigned char*)&(puart->Raw[port][puart->Actual[port]][0]);
+                break;
+            default:
+                printf("No valid port number! (%d)\n", port);
+                break;
+        }
     }
+    else SensorDevInitErr();
 }
 
 void SetSensorColour(char port)
 {
-    switch(port)
+    if(uartinit)
     {
-        case S1:
-            psensor1 = (unsigned char*)&(puart->Raw[port][puart->Actual[port]][0]);
-            break;
-        case S2:
-            psensor2 = (unsigned char*)&(puart->Raw[port][puart->Actual[port]][0]);
-            break;
-        case S3:
-            psensor3 = (unsigned char*)&(puart->Raw[port][puart->Actual[port]][0]);
-            break;
-        case S4:
-            psensor4 = (unsigned char*)&(puart->Raw[port][puart->Actual[port]][0]);
-            break;
-        default:
-            printf("No valid port number! (%d)\n", port);
-            break;
+        switch(port)
+        {
+            case S1:
+                psensor1 = (unsigned char*)&(puart->Raw[port][puart->Actual[port]][0]);
+                break;
+            case S2:
+                psensor2 = (unsigned char*)&(puart->Raw[port][puart->Actual[port]][0]);
+                break;
+            case S3:
+                psensor3 = (unsigned char*)&(puart->Raw[port][puart->Actual[port]][0]);
+                break;
+            case S4:
+                psensor4 = (unsigned char*)&(puart->Raw[port][puart->Actual[port]][0]);
+                break;
+            default:
+                printf("No valid port number! (%d)\n", port);
+                break;
+        }
     }
+    else SensorDevInitErr();
 }
 
 void SetSensorNXTTouch(char port)
 {
-    switch(port)
+    if(analoginit)
     {
-        case S1:
-            psensor1 = (unsigned char*)&(panalog->Pin1[port][panalog->Actual[port]]);
-            break;
-        case S2:
-            psensor2 = (unsigned char*)&(panalog->Pin1[port][panalog->Actual[port]]);
-            break;
-        case S3:
-            psensor3 = (unsigned char*)&(panalog->Pin1[port][panalog->Actual[port]]);
-            break;
-        case S4:
-            psensor4 = (unsigned char*)&(panalog->Pin1[port][panalog->Actual[port]]);
-            break;
-        default:
-            printf("No valid port number! (%d)\n", port);
-            break;
+        switch(port)
+        {
+            case S1:
+                psensor1 = (unsigned char*)&(panalog->Pin1[port][panalog->Actual[port]]);
+                break;
+            case S2:
+                psensor2 = (unsigned char*)&(panalog->Pin1[port][panalog->Actual[port]]);
+                break;
+            case S3:
+                psensor3 = (unsigned char*)&(panalog->Pin1[port][panalog->Actual[port]]);
+                break;
+            case S4:
+                psensor4 = (unsigned char*)&(panalog->Pin1[port][panalog->Actual[port]]);
+                break;
+            default:
+                printf("No valid port number! (%d)\n", port);
+                break;
+        }
     }
+    else SensorDevInitErr();
 }
 
 void SetSensorNXTUS(char port)
 {
-    switch(port)
+    if(i2cinit)
     {
-        case S1:
-            psensor1 = (unsigned char*)&(pi2c->Raw[port][puart->Actual[port]][0]);
-            break;
-        case S2:
-            psensor2 = (unsigned char*)&(pi2c->Raw[port][puart->Actual[port]][0]);
-            break;
-        case S3:
-            psensor3 = (unsigned char*)&(pi2c->Raw[port][puart->Actual[port]][0]);
-            break;
-        case S4:
-            psensor4 = (unsigned char*)&(pi2c->Raw[port][puart->Actual[port]][0]);
-            break;
-        default:
-            printf("No valid port number! (%d)\n", port);
-            break;
+        switch(port)
+        {
+            case S1:
+                psensor1 = (unsigned char*)&(pi2c->Raw[port][puart->Actual[port]][0]);
+                break;
+            case S2:
+                psensor2 = (unsigned char*)&(pi2c->Raw[port][puart->Actual[port]][0]);
+                break;
+            case S3:
+                psensor3 = (unsigned char*)&(pi2c->Raw[port][puart->Actual[port]][0]);
+                break;
+            case S4:
+                psensor4 = (unsigned char*)&(pi2c->Raw[port][puart->Actual[port]][0]);
+                break;
+            default:
+                printf("No valid port number! (%d)\n", port);
+                break;
+        }
     }
+    else SensorDevInitErr();
 }
 
 void SetSensorNXTLight(char port)                                               //NXT light sensor, EV3 only has coloursensor
 {
-    switch(port)
+    if(analoginit)
     {
-        case S1:
-            psensor1 = (unsigned char*)&(panalog->Pin1[port][panalog->Actual[port]]);
-            break;
-        case S2:
-            psensor2 = (unsigned char*)&(panalog->Pin1[port][panalog->Actual[port]]);
-            break;
-        case S3:
-            psensor3 = (unsigned char*)&(panalog->Pin1[port][panalog->Actual[port]]);
-            break;
-        case S4:
-            psensor4 = (unsigned char*)&(panalog->Pin1[port][panalog->Actual[port]]);
-            break;
-        default:
-            printf("No valid port number! (%d)\n", port);
-            break;
+        switch(port)
+        {
+            case S1:
+                psensor1 = (unsigned char*)&(panalog->Pin1[port][panalog->Actual[port]]);
+                break;
+            case S2:
+                psensor2 = (unsigned char*)&(panalog->Pin1[port][panalog->Actual[port]]);
+                break;
+            case S3:
+                psensor3 = (unsigned char*)&(panalog->Pin1[port][panalog->Actual[port]]);
+                break;
+            case S4:
+                psensor4 = (unsigned char*)&(panalog->Pin1[port][panalog->Actual[port]]);
+                break;
+            default:
+                printf("No valid port number! (%d)\n", port);
+                break;
+        }
     }
+    else SensorDevInitErr();
+}
+//</editor-fold>
+
+//Button stuffs
+//<editor-fold>
+UI *pui;
+int uifile;
+char uiinit = false;
+
+void ButtonDevInitErr()
+{
+    printf("The button device is not initialized.\n"
+           "Don't forget to use \"EV3Init();\" and \"EV3Exit();\".\n");
+}
+
+void UIInit()
+{
+    if(uiinit == false)
+    {
+        if((uifile = open(UI_DEVICE_NAME, O_RDWR | O_SYNC)) == -1)
+	{
+		printf("Failed to open UI device\n");
+		exit(-1); 
+	}
+	pui  =  (UI*)mmap(0, sizeof(UI), PROT_READ | PROT_WRITE, MAP_FILE | MAP_SHARED, uifile, 0);
+	if (panalog == MAP_FAILED)
+	{
+		printf("Failed to map UI device\n");
+		exit(-1);
+	}
+	printf("UI device ready\n");
+        uiinit = true;
+    }
+}
+
+void UIExit()
+{
+    if(uiinit)
+    {
+        int error;
+        printf("Closing UI device...\n");
+        error = munmap(pui, sizeof(UI));
+        if(error == -1) printf("Failed to unmap UI device\n");
+        else printf("UI device unmapped.\n");
+        error = close(uifile);
+        if(error == -1) printf("Failed to close UI device");
+        else printf("UI device closed.\n");
+        uiinit = false;
+    }
+}
+
+char UpButtonState()
+{
+    if(uiinit) return pui->Pressed[0];
+    else ButtonDevInitErr();
+}
+
+char EnterButtonState()
+{
+    if(uiinit) return pui->Pressed[1];
+    else ButtonDevInitErr();
+}
+
+char DownButtonState()
+{
+    if(uiinit) return pui->Pressed[2];
+    else ButtonDevInitErr();
+}
+
+char RightButtonState()
+{
+    if(uiinit) return pui->Pressed[3];
+    else ButtonDevInitErr();
+}
+
+char LeftButtonState()
+{
+    if(uiinit) return pui->Pressed[4];
+    else ButtonDevInitErr();
+}
+
+char BackButtonState()
+{
+    if(uiinit) return pui->Pressed[5];
+    else ButtonDevInitErr();
 }
 //</editor-fold>
 
@@ -488,6 +634,7 @@ void EV3Init()
     UARTInit();
     I2CInit();
     dLcdInit(lcd.Lcd);
+    ButtonInit();
 }
 
 void EV3Exit()
@@ -497,4 +644,5 @@ void EV3Exit()
     UARTInit();
     I2CInit();
     dLcdExit();
+    ButtonExit();
 }
