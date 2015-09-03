@@ -593,11 +593,6 @@ char BackButtonState()
 //<editor-fold>
 LCD lcd;
 char lcdupdate = false;
-void TextOut(int x, int y, char *str)
-{
-    dLcdDrawText(lcd.Lcd, FG_COLOR, x, y, NORMAL_FONT,(signed char*)str);
-    if(lcdupdate == false) dLcdUpdate(&lcd);
-}
 
 void ClearScreen()
 {
@@ -608,6 +603,12 @@ void ClearScreen()
 void UpdateScreen()
 {
     dLcdUpdate(&lcd);
+}
+
+void TextOut(int x, int y, char *str)
+{
+    dLcdDrawText(lcd.Lcd, FG_COLOR, x, y, NORMAL_FONT,(signed char*)str);
+    if(lcdupdate == false) dLcdUpdate(&lcd);
 }
 
 void NumOut(int x, int y, int num)
@@ -626,6 +627,23 @@ void TextNumOut(int x, int y, char str[100], int num)
 }
 //</editor-fold>
 
+//Manual exit
+void ExitChecker(void *threadmain)
+{
+    LCDClear(lcd.Lcd);
+    dLcdDrawText(lcd.Lcd, FG_COLOR, 10, 20, NORMAL_FONT, "Running...   (press back to exit)");
+    dLcdDrawText(lcd.Lcd, FG_COLOR, 10, (21 + dLcdGetFontHeight(NORMAL_FONT)), TINY_FONT, "Using EV3-C by qwerty514");
+    while(true)
+    {
+        if(BackButtonState == true)
+        {
+            pthread_cancel((pthread_t)threadmain);
+            EV3Exit();
+        }
+        sleep(1);
+    }
+}
+
 //Global stuffs
 void EV3Init()
 {
@@ -634,7 +652,12 @@ void EV3Init()
     UARTInit();
     I2CInit();
     dLcdInit(lcd.Lcd);
-    ButtonInit();
+    UIInit();
+    pthread_t threadbackground;
+    pthread_t threadmain = pthread_self();
+    pthread_setcancelstate(PTHREAD_CANCEL_ENABLE);
+    pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS);
+    pthread_create(&threadbackground, NULL, &ExitChecker, (void*)threadmain);
 }
 
 void EV3Exit()
@@ -644,5 +667,6 @@ void EV3Exit()
     UARTInit();
     I2CInit();
     dLcdExit();
-    ButtonExit();
+    UIExit();
+    exit(0);
 }
