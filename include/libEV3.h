@@ -118,7 +118,7 @@ extern char lcdupdate;
 
 //Button stuffs
 #define PRESSED 1
-#define
+#define NOTPRESSED 0
 extern UI *pui;
 
 #ifdef	__cplusplus
@@ -131,7 +131,7 @@ extern "C" {
     void OnFwd(char outputs, char power);
     void OnFwdSpeed(char outputs, char speed);
     void OnFwdSync(char outputs, char speed, short turn);
-    void Off(char outputs, char mode);
+    void Off(char outputs);
     void WaitForMotor(char outputs);
     void ResetTacho(char outputs);
     void ReadTacho(char outputnumber, char *speed, int *count);
