@@ -12,6 +12,7 @@
 #include <string.h>
 #include <sys/mman.h>
 #include <pthread.h>
+#include <time.h>
 #include "libEV3.h"
 #include "d_lcd.h"
 
@@ -33,7 +34,7 @@ void PWMInit()
     {
         printf("Could not initialize motors!\n");
         close(pwmfile);
-        exit(1);
+        exit(-1);
     }
     //Send
     motorcommand[0] = opPROGRAM_START;
@@ -64,7 +65,7 @@ void SetMotorPolarity(char outputs, char polarity)
     else PWMDevInitErr();
 }
 
-void SetMotorType(char outputnumber, char type)                                 //LET OP: GEBRUIK NUMMER (0,1,2,3) NIET BIJV. "OUTPUT_A"
+void SetMotorType(char outputnumber, char type)
 {
     if(pwminit)
     {
@@ -90,7 +91,7 @@ void ResetTacho(char outputs)
     else PWMDevInitErr();
 }
 
-void ReadTacho(char outputnumber, char *speed, int *count)                      //LET OP: GEBRUIK NUMMER (0,1,2,3) NIET BIJV. "OUTPUT_A"
+void ReadTacho(char outputnumber, char *speed, int *count)
 {
     if(pwminit)
     {
@@ -117,7 +118,7 @@ void WaitForMotor(char outputs)
     else PWMDevInitErr();
 }
 
-void OnFwd(char outputs, char power)                                            //Which name? OnFwd? OnPwr? SetPwr? Pwr?
+void OnFwd(char outputs, char power)
 {
     if(power > 100) power = 100;
     if(power < -100) power = -100;
@@ -160,19 +161,15 @@ void OnFwdSync(char outputs, char speed, short turn)
         motorcommand[0] = opOUTPUT_STEP_SYNC;
         motorcommand[1] = outputs;
         motorcommand[2] = speed;
-        motorcommand[3] = turn;
         memcpy(motorcommand+3, &turn, sizeof(turn));
-        motorcommand[5] = 0;
-        motorcommand[6] = 0;
-        motorcommand[7] = 0;
-        motorcommand[8] = 0;
+        memset(motorcommand+5, 0, sizeof(int));
         motorcommand[9] = 0;
         write(pwmfile, motorcommand, 10);
     }
     else PWMDevInitErr();
 }
 
-void Off(char outputs)                                                          //Needs to be tested
+void Off(char outputs)
 {
     if(pwminit)
     {
@@ -192,6 +189,59 @@ void Float(char outputs)
         motorcommand[1] = outputs;
         motorcommand[2] = FLOAT;
         write(pwmfile, motorcommand, 3);
+    }
+    else PWMDevInitErr();
+}
+//</editor-fold>
+
+//Tacho stuffs
+//<editor-fold>
+MOTORDATA ptacho;
+int tachofile;
+char tachoinit;
+
+void TachoInit()
+{
+    if(tachoinit == false)
+    {
+        if((tachofile = open(MOTOR_DEVICE_NAME, O_RDWR | O_SYNC)) == -1)
+        {
+            printf("Failed to open tacho device.");
+            exit(-1);
+        }
+        ptacho = (MOTORDATA*)mmap(0, sizeof(MOTORDATA)*vmOUTPUTS, PROT_READ | PROT_WRITE, MAP_FILE | MAP_SHARED, tachofile, 0);
+        if(ptacho == MAP_FAILED)
+        {
+            printf("Failed to map tacho device\n");
+            exit(-1);
+        }
+        tachoinit = true;
+    }
+}
+
+void TachoExit()
+{
+    if(tachoinit)
+    {
+        int error;
+        printf("Closing tacho device...\n");
+        error = munmap(ptacho, sizeof(MOTORDATA)*vmOUTPUTS);
+        if(error == -1) printf("Failed to unmap tacho device\n");
+        else printf("Tacho device unmapped.\n");
+        error = close(tachofile);
+        if(error == -1) printf("Failed to close tacho device");
+        else printf("tacho device closed.\n");
+        tachoinit = false;
+    }
+}
+
+void ClearTacho(char outputs)
+{
+    if(pwminit)
+    {
+        motorcommand[0] = opOUTPUT_CLR_COUNT;
+        motorcommand[1] = outputs;
+        write(pwmfile, motorcommand, 2);
     }
     else PWMDevInitErr();
 }
@@ -509,6 +559,7 @@ void SetSensorNXTLight(char port)                                               
 UI *pui;
 int uifile;
 char uiinit = false;
+char ledcommand[2] = { 0, 0};
 
 void ButtonDevInitErr()
 {
@@ -587,6 +638,16 @@ char BackButtonState()
     if(uiinit) return pui->Pressed[5];
     else ButtonDevInitErr();
 }
+
+void SetLedPattern(char pattern)
+{
+    if(uiinit)
+    {
+        ledcommand = '0' + pattern;
+        write(uifile, ledcommand, 2);
+    }
+    else ButtenDevInitErr();
+}
 //</editor-fold>
 
 //LCD stuffs
@@ -627,7 +688,7 @@ void TextNumOut(int x, int y, char str[100], int num)
 }
 //</editor-fold>
 
-//Manual exit
+//Global stuffs
 void *ExitChecker(void *threadmain)
 {
     LCDClear(lcd.Lcd);
@@ -640,14 +701,14 @@ void *ExitChecker(void *threadmain)
             pthread_cancel((pthread_t)threadmain);
             EV3Exit();
         }
-        sleep(1);
+        nanosleep(0, 500000000);
     }
 }
 
-//Global stuffs
 void EV3Init()
 {
     PWMInit();
+    TachoInit();
     AnalogInit();
     UARTInit();
     I2CInit();
@@ -663,6 +724,7 @@ void EV3Init()
 void EV3Exit()
 {
     PWMExit();
+    TachoInit();
     AnalogExit();
     UARTInit();
     I2CInit();

@@ -96,6 +96,24 @@ typedef unsigned char byte;
 //</editor-fold>
 //</editor-fold>
 
+//Tacho stuffs
+//<editor-fold>
+#define MOTOR1COUNT ptacho[0].TachoCounts
+#define MOTOR2COUNT ptacho[1].TachoCounts
+#define MOTOR3COUNT ptacho[2].TachoCounts
+#define MOTOR4COUNT ptacho[3].TachoCounts
+#define MOTOR1SPEED ptacho[0].Speed
+#define MOTOR2SPEED ptacho[1].Speed
+#define MOTOR3SPEED ptacho[2].Speed
+#define MOTOR4SPEED ptacho[3].Speed
+#define MOTOR1SENSOR ptacho[0].TachoSensor
+#define MOTOR2SENSOR ptacho[1].TachoSensor
+#define MOTOR3SENSOR ptacho[2].TachoSensor
+#define MOTOR4SENSOR ptacho[3].TachoSensor
+extern MOTORDATA *ptacho;
+extern int tachofile;
+//</editor-fold>
+
 //Sensor-stuffs
 //<editor-fold>
 #define SENSOR_1 *psensor1
@@ -113,6 +131,7 @@ extern void *psensor4;
 //</editor-fold>
 
 //LCD stuffs
+//<editor-fold>
 extern LCD lcd;
 extern char lcdupdate;
 
@@ -120,21 +139,33 @@ extern char lcdupdate;
 #define PRESSED 1
 #define NOTPRESSED 0
 extern UI *pui;
+//</editor-fold>
 
+//Time
+//<editor-fold>
+#include <time.h>
+#define Wait(time) nanosleep(0, (time*1000000))
+//</editor-fold>
+
+//Functions
+//<editor-fold>
 #ifdef	__cplusplus
 extern "C" {
 #endif
     void OutputInit();
     void OutputExit();
     void SetMotorPolarity(char outputs, char polarity);
-    void SetMotorType(char outputnumber, char type);
+    void SetMotorType(char outputnumber, char type);                            //Outputnumbers are 0-3, do NOT use "OUTPUT_A" for example
     void OnFwd(char outputs, char power);
     void OnFwdSpeed(char outputs, char speed);
     void OnFwdSync(char outputs, char speed, short turn);
     void Off(char outputs);
     void WaitForMotor(char outputs);
-    void ResetTacho(char outputs);
-    void ReadTacho(char outputnumber, char *speed, int *count);
+    void ResetTacho(char outputs);                                              //ResetTacho and ReadTacho only use d_pwm, no need for TachoInit();
+    void ReadTacho(char outputnumber, char *speed, int *count);                 //Outputnumbers are 0-3, do NOT use "OUTPUT_A" for example
+    void TachoInit();
+    void TachoExit();
+    void ClearTacho();
     void AnalogInit();
     void AnalogExit();
     void UARTInit();
@@ -156,11 +187,12 @@ extern "C" {
     char RightButtonState();
     char LeftButtonState();
     char BackButtonState();
+    void *ExitChecker(void *threadmain);
     void EV3Init();
     void EV3Exit();
 #ifdef	__cplusplus
 }
 #endif
-
+//</editor-fold>
 #endif	/* EV3LIB_H */
 
