@@ -691,6 +691,7 @@ void TextNumOut(int x, int y, char str[100], int num)
 //Global stuffs
 void *ExitChecker(void *threadmain)
 {
+	const timespec pollsleep = {0, 500000000L};
     LCDClear(lcd.Lcd);
     dLcdDrawText(lcd.Lcd, FG_COLOR, 10, 20, NORMAL_FONT, "Running...   (press back to exit)");
     dLcdDrawText(lcd.Lcd, FG_COLOR, 10, (21 + dLcdGetFontHeight(NORMAL_FONT)), TINY_FONT, "Using EV3-C by qwerty514");
@@ -701,7 +702,7 @@ void *ExitChecker(void *threadmain)
             pthread_cancel((pthread_t)threadmain);
             EV3Exit();
         }
-        nanosleep(0, 500000000);
+        nanosleep(pollsleep, NULL);
     }
 }
 
