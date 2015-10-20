@@ -165,7 +165,7 @@ extern "C" {
     void ReadTacho(char outputnumber, char *speed, int *count);                 //Outputnumbers are 0-3, do NOT use "OUTPUT_A" for example
     void TachoInit();
     void TachoExit();
-    void ClearTacho();
+    void ClearTacho(char outputs);
     void AnalogInit();
     void AnalogExit();
     void UARTInit();

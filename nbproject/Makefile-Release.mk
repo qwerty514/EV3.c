@@ -21,7 +21,7 @@ FC=gfortran
 AS=arm-none-linux-gnueabi-as
 
 # Macros
-CND_PLATFORM=WinAVR-Windows
+CND_PLATFORM=CSLite-Windows
 CND_DLIB_EXT=dll
 CND_CONF=Release
 CND_DISTDIR=dist
@@ -68,12 +68,12 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libev3-c.a: ${OBJECTFILES}
 ${OBJECTDIR}/lib/d_lcd.o: lib/d_lcd.c 
 	${MKDIR} -p ${OBJECTDIR}/lib
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -DRELEASE -Iinclude -Ilib -Ires -Isrc -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/lib/d_lcd.o lib/d_lcd.c
+	$(COMPILE.c) -O2 -Iinclude -Ilib -Ires -Isrc -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/lib/d_lcd.o lib/d_lcd.c
 
 ${OBJECTDIR}/src/libEV3.o: src/libEV3.c 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -DRELEASE -Iinclude -Ilib -Ires -Isrc -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/libEV3.o src/libEV3.c
+	$(COMPILE.c) -O2 -Iinclude -Ilib -Ires -Isrc -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/libEV3.o src/libEV3.c
 
 # Subprojects
 .build-subprojects:

@@ -19,9 +19,10 @@ CCC=arm-none-linux-gnueabi-g++
 CXX=arm-none-linux-gnueabi-g++
 FC=gfortran
 AS=arm-none-linux-gnueabi-as
+AR=arm-none-linux-gnueabi-ar -v
 
 # Macros
-CND_PLATFORM=WinAVR-Windows
+CND_PLATFORM=CSLite-Windows
 CND_DLIB_EXT=dll
 CND_CONF=Debug
 CND_DISTDIR=dist

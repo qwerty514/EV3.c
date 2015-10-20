@@ -49,7 +49,7 @@
   <confs>
     <conf name="Debug" type="3">
       <toolsSet>
-        <compilerSet>WinAVR|WinAVR</compilerSet>
+        <compilerSet>CSLite|WinAVR</compilerSet>
         <dependencyChecking>true</dependencyChecking>
         <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>
@@ -71,6 +71,7 @@
           </preprocessorList>
         </ccTool>
         <archiverTool>
+          <commandlineTool>arm-none-linux-gnueabi-ar -v</commandlineTool>
         </archiverTool>
       </compileType>
       <item path="include/bytecodes.h" ex="false" tool="3" flavor2="0">
@@ -110,7 +111,7 @@
     </conf>
     <conf name="Release" type="3">
       <toolsSet>
-        <compilerSet>WinAVR|WinAVR</compilerSet>
+        <compilerSet>CSLite|WinAVR</compilerSet>
         <dependencyChecking>true</dependencyChecking>
         <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>
@@ -123,15 +124,9 @@
             <pElem>res</pElem>
             <pElem>src</pElem>
           </incDir>
-          <preprocessorList>
-            <Elem>RELEASE</Elem>
-          </preprocessorList>
         </cTool>
         <ccTool>
           <developmentMode>5</developmentMode>
-          <preprocessorList>
-            <Elem>RELEASE</Elem>
-          </preprocessorList>
         </ccTool>
         <fortranCompilerTool>
           <developmentMode>5</developmentMode>

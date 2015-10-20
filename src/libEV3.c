@@ -196,7 +196,7 @@ void Float(char outputs)
 
 //Tacho stuffs
 //<editor-fold>
-MOTORDATA ptacho;
+MOTORDATA *ptacho;
 int tachofile;
 char tachoinit;
 
@@ -643,10 +643,10 @@ void SetLedPattern(char pattern)
 {
     if(uiinit)
     {
-        ledcommand = '0' + pattern;
+        ledcommand[0] = '0' + pattern;
         write(uifile, ledcommand, 2);
     }
-    else ButtenDevInitErr();
+    else ButtonDevInitErr();
 }
 //</editor-fold>
 
@@ -691,7 +691,7 @@ void TextNumOut(int x, int y, char str[100], int num)
 //Global stuffs
 void *ExitChecker(void *threadmain)
 {
-	const timespec pollsleep = {0, 500000000L};
+    const struct timespec pollsleep = {0, 500000000L};
     LCDClear(lcd.Lcd);
     dLcdDrawText(lcd.Lcd, FG_COLOR, 10, 20, NORMAL_FONT, "Running...   (press back to exit)");
     dLcdDrawText(lcd.Lcd, FG_COLOR, 10, (21 + dLcdGetFontHeight(NORMAL_FONT)), TINY_FONT, "Using EV3-C by qwerty514");
@@ -702,7 +702,7 @@ void *ExitChecker(void *threadmain)
             pthread_cancel((pthread_t)threadmain);
             EV3Exit();
         }
-        nanosleep(pollsleep, NULL);
+        nanosleep(&pollsleep, NULL);
     }
 }
 
