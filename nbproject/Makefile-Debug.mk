@@ -13,13 +13,13 @@ CP=cp
 GREP=grep
 NM=nm
 CCADMIN=CCadmin
-RANLIB=ranlib
+RANLIB=arm-none-linux-gnueabi-ranlib
 CC=arm-none-linux-gnueabi-gcc
 CCC=arm-none-linux-gnueabi-g++
 CXX=arm-none-linux-gnueabi-g++
 FC=gfortran
 AS=arm-none-linux-gnueabi-as
-AR=arm-none-linux-gnueabi-ar -v
+AR=arm-none-linux-gnueabi-ar
 
 # Macros
 CND_PLATFORM=CSLite-Windows

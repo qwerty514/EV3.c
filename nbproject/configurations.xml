@@ -71,7 +71,8 @@
           </preprocessorList>
         </ccTool>
         <archiverTool>
-          <commandlineTool>arm-none-linux-gnueabi-ar -v</commandlineTool>
+          <commandlineTool>arm-none-linux-gnueabi-ar</commandlineTool>
+          <ranlibTool>arm-none-linux-gnueabi-ranlib</ranlibTool>
         </archiverTool>
       </compileType>
       <item path="include/bytecodes.h" ex="false" tool="3" flavor2="0">
@@ -135,6 +136,8 @@
           <developmentMode>5</developmentMode>
         </asmTool>
         <archiverTool>
+          <commandlineTool>arm-none-linux-gnueabi-ar</commandlineTool>
+          <ranlibTool>arm-none-linux-gnueabi-ranlib</ranlibTool>
         </archiverTool>
       </compileType>
       <item path="include/bytecodes.h" ex="false" tool="3" flavor2="0">
