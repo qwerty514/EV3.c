@@ -725,10 +725,10 @@ void EV3Init()
 void EV3Exit()
 {
     PWMExit();
-    TachoInit();
+    TachoExit();
     AnalogExit();
-    UARTInit();
-    I2CInit();
+    UARTExit();
+    I2CExit();
     dLcdExit();
     UIExit();
     exit(0);
