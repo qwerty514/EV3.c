@@ -39,9 +39,15 @@ OBJECTFILES= \
 	${OBJECTDIR}/lib/d_lcd.o \
 	${OBJECTDIR}/src/libEV3.o
 
+# Test Directory
+TESTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}/tests
+
+# Test Files
+TESTFILES= \
+	${TESTDIR}/TestFiles/program
 
 # C Compiler Flags
-CFLAGS=
+CFLAGS=-pthread
 
 # CC Compiler Flags
 CCFLAGS=
@@ -69,15 +75,63 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libev3-c.a: ${OBJECTFILES}
 ${OBJECTDIR}/lib/d_lcd.o: lib/d_lcd.c 
 	${MKDIR} -p ${OBJECTDIR}/lib
 	${RM} "$@.d"
-	$(COMPILE.c) -g -DDEBUG -Iinclude -Ilib -Ires -Isrc -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/lib/d_lcd.o lib/d_lcd.c
+	$(COMPILE.c) -g -DDEBUG -Iinclude -Ilib -Ires -Isrc -I. -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/lib/d_lcd.o lib/d_lcd.c
 
 ${OBJECTDIR}/src/libEV3.o: src/libEV3.c 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.c) -g -DDEBUG -Iinclude -Ilib -Ires -Isrc -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/libEV3.o src/libEV3.c
+	$(COMPILE.c) -g -DDEBUG -Iinclude -Ilib -Ires -Isrc -I. -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/libEV3.o src/libEV3.c
 
 # Subprojects
 .build-subprojects:
+
+# Build Test Targets
+.build-tests-conf: .build-conf ${TESTFILES}
+${TESTDIR}/TestFiles/program: ${TESTDIR}/tests/SensorTest.o ${OBJECTFILES:%.o=%_nomain.o}
+	${MKDIR} -p ${TESTDIR}/TestFiles
+	${LINK.c}   -o ${TESTDIR}/TestFiles/program $^ ${LDLIBSOPTIONS} 
+
+
+${TESTDIR}/tests/SensorTest.o: tests/SensorTest.c 
+	${MKDIR} -p ${TESTDIR}/tests
+	${RM} "$@.d"
+	$(COMPILE.c) -g -DDEBUG -Iinclude -Ilib -Ires -Isrc -I. -I. -I. -I. -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/SensorTest.o tests/SensorTest.c
+
+
+${OBJECTDIR}/lib/d_lcd_nomain.o: ${OBJECTDIR}/lib/d_lcd.o lib/d_lcd.c 
+	${MKDIR} -p ${OBJECTDIR}/lib
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/lib/d_lcd.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.c) -g -DDEBUG -Iinclude -Ilib -Ires -Isrc -I. -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/lib/d_lcd_nomain.o lib/d_lcd.c;\
+	else  \
+	    ${CP} ${OBJECTDIR}/lib/d_lcd.o ${OBJECTDIR}/lib/d_lcd_nomain.o;\
+	fi
+
+${OBJECTDIR}/src/libEV3_nomain.o: ${OBJECTDIR}/src/libEV3.o src/libEV3.c 
+	${MKDIR} -p ${OBJECTDIR}/src
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/src/libEV3.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.c) -g -DDEBUG -Iinclude -Ilib -Ires -Isrc -I. -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/libEV3_nomain.o src/libEV3.c;\
+	else  \
+	    ${CP} ${OBJECTDIR}/src/libEV3.o ${OBJECTDIR}/src/libEV3_nomain.o;\
+	fi
+
+# Run Test Targets
+.test-conf:
+	@if [ "${TEST}" = "" ]; \
+	then  \
+	    ${TESTDIR}/TestFiles/program || true; \
+	else  \
+	    ./${TEST} || true; \
+	fi
 
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}

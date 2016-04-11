@@ -43,11 +43,17 @@
 #
 # NOCDDL
 
+# include project implementation makefile
+include nbproject/Makefile-impl.mk
+
+# include project make variables
+include nbproject/Makefile-variables.mk
 
 # Environment 
 MKDIR=mkdir
 CP=cp
 CCADMIN=CCadmin
+DOWNLOADER="C:\Program Files (x86)\BricxCC\dll.exe"
 
 
 # build
@@ -97,7 +103,8 @@ build-tests: .build-tests-post
 # Add your pre 'build-tests' code here...
 
 .build-tests-post: .build-tests-impl
-# Add your post 'build-tests' code here...
+	#${DOWNLOADER} -x program
+	#${DOWNLOADER} -d "${OUTPUT_PATH}"
 
 
 # run tests
@@ -118,11 +125,3 @@ help: .help-post
 
 .help-post: .help-impl
 # Add your post 'help' code here...
-
-
-
-# include project implementation makefile
-include nbproject/Makefile-impl.mk
-
-# include project make variables
-include nbproject/Makefile-variables.mk

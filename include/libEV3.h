@@ -222,14 +222,14 @@ extern UI *pui;
 #include <time.h>
 #define Wait(time) nanosleep(0, (time*1000000))
 //</editor-fold>
-
+//
 //Functions
 //<editor-fold>
 #ifdef	__cplusplus
 extern "C" {
 #endif
-    void OutputInit();
-    void OutputExit();
+    void PWMInit();
+    void PWMExit();
     void SetMotorPolarity(char outputs, char polarity);
     void SetMotorType(char outputnumber, char type);                            //Outputnumbers are 0-3, do NOT use "OUTPUT_A" for example
     void OnFwd(char outputs, char power);
@@ -248,13 +248,6 @@ extern "C" {
     void UARTExit();
     void I2CInit();
     void I2CExit();
-    void SetSensorTouch(char port);
-    void SetSensorGyro(char port);
-    void SetSensorUS(char port);
-    void SetSensorColour(char port);
-    void SetSensorNXTTouch(char port);
-    void SetSensorNXTUS(char port);
-    void SetSensorNXTLight(char port);
     void UIInit();
     void UIExit();
     char UpButtonState();

@@ -53,7 +53,7 @@ void PWMExit()
     }
 }
 
-void SetMotorPolarity(char outputs, char polarity)
+void SetMotorPolarity(char outputs, char polarity) //Does not work with OnFwdSync. To-Do: New polarity system
 {
     if(pwminit)
     {
@@ -107,7 +107,7 @@ void ReadTacho(char outputnumber, char *speed, int *count)
     else PWMDevInitErr();
 }
 
-void WaitForMotor(char outputs)
+void WaitForMotor(char outputs) //Will not work, replace with opOutput_Test with pointer to bool
 {
     if(pwminit)
     {
@@ -158,7 +158,7 @@ void OnFwdSync(char outputs, char speed, short turn)
     if(speed < -100) speed = -100;
     if(pwminit)
     {
-        motorcommand[0] = opOUTPUT_STEP_SYNC;
+        motorcommand[0] = opOUTPUT_TIME_SYNC;
         motorcommand[1] = outputs;
         motorcommand[2] = speed;
         memcpy(motorcommand+3, &turn, sizeof(turn));
@@ -600,17 +600,22 @@ void TextOut(int x, int y, char *str)
     if(lcdupdate == false) dLcdUpdate(&lcd);
 }
 
-void NumOut(int x, int y, int num)
+void NumOut(int x, int y, int num, char fieldwidth)
 {
-    char str[2];
-    sprintf(str, "%d", num);
+    char str[fieldwidth+1];
+    char numberwidth = 0;
+    memset(str, ' ', fieldwidth);
+    str[fieldwidth] = '\0';
+    numberwidth += sprintf(str, "%d", num);
+    str[numberwidth] = ' ';
     dLcdDrawText(lcd.Lcd, FG_COLOR, x, y, NORMAL_FONT, (signed char *)str);
     if(lcdupdate == false) dLcdUpdate(&lcd);
 }
 
-void TextNumOut(int x, int y, char str[100], int num)
+void TextNumOut(int x, int y, char str[100], int num, char fieldwidth)
 {
-    sprintf(str+strlen(str), "%s%d", str, num);
+    memset(str+strlen(str), ' ', fieldwidth);
+    sprintf(str+strlen(str), "%d", num);
     dLcdDrawText(lcd.Lcd, FG_COLOR, x, y, NORMAL_FONT, (signed char *)str);
     if(lcdupdate == false) dLcdUpdate(&lcd);
 }
