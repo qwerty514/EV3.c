@@ -184,18 +184,26 @@ extern int tachofile;
 
 //Sensor-stuffs
 //<editor-fold>
-#define SENSOR_1 *psensor1
-#define SENSOR_2 *psensor2
-#define SENSOR_3 *psensor3
-#define SENSOR_4 *psensor4
+#define SENSOR_1 Sensor1Func(S1)
+#define SENSOR_2 Sensor2Func(S2)
+#define SENSOR_3 Sensor3Func(S3)
+#define SENSOR_4 Sensor4Func(S4)
 #define S1 0x00
 #define S2 0x01
 #define S3 0x02
 #define S4 0x03
-extern void *psensor1;
-extern void *psensor2;
-extern void *psensor3;
-extern void *psensor4;
+extern unsigned char (*Sensor1Func)(char port);
+extern unsigned char (*Sensor2Func)(char port);
+extern unsigned char (*Sensor3Func)(char port);
+extern unsigned char (*Sensor4Func)(char port);
+
+#define SetSensorTouch(port)
+#define SetSensorColour(port)
+#define SetSensorUS(port)
+#define SetSensorGyro(port)
+#define SetSensorNXTTouch(port)
+#define SetSensorNXTLight(port)
+#define SetSensorNXTUS(port)
 //</editor-fold>
 
 //LCD stuffs

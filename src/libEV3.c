@@ -249,10 +249,10 @@ void ClearTacho(char outputs)
 
 //Sensor stuffs
 //<editor-fold>
-void *psensor1;
-void *psensor2;
-void *psensor3;
-void *psensor4;
+unsigned char (*Sensor1Func)(char);
+unsigned char (*Sensor2Func)(char);
+unsigned char (*Sensor3Func)(char);
+unsigned char (*Sensor4Func)(char);
 int analogfile;
 int uartfile;
 int i2cfile;
@@ -262,6 +262,30 @@ IIC *pi2c;
 char analoginit = false;
 char uartinit = false;
 char i2cinit = false;
+
+enum COLOURSENSORMODE
+{
+    REFLECTED,
+    AMBIENT,
+    COLOUR,
+    REFLECTEDRAW,
+    RGBRAW,
+    CALIBRATION
+};
+
+/* //Using modified enum NXTCOLOR in bytecodes.h
+enum COLOURS
+{
+    NONE,
+    BLACK,
+    BLUE,
+    GREEN,
+    YELLOW,
+    RED,
+    WHITE,
+    BROWN
+};
+*/
 
 void SensorDevInitErr()
 {
@@ -305,6 +329,30 @@ void AnalogExit()
     }
 }
 
+unsigned char Pin1RawVal(char port)
+{
+    if(analoginit)
+    {
+        if(port <= S4)
+        {
+            return (unsigned char)(panalog->Pin1[port][panalog->Actual[port]]);
+        }
+    }
+    else SensorDevInitErr();
+}
+
+unsigned char Pin6RawVal(char port)
+{
+    if(analoginit)
+    {
+        if(port <= S4)
+        {
+            return (unsigned char)(panalog->Pin1[port][panalog->Actual[port]]);
+        }
+    }
+    else SensorDevInitErr();
+}
+
 void UARTInit()
 {
     if(uartinit == false)
@@ -312,7 +360,7 @@ void UARTInit()
         if((uartfile = open(UART_DEVICE_NAME, O_RDWR | O_SYNC)) == -1)
 	{
 		printf("Failed to open UART device\n");
-		exit(-1); 
+		exit(-1);
 	}
 	puart  =  (UART*)mmap(0, sizeof(UART), PROT_READ | PROT_WRITE, MAP_FILE | MAP_SHARED, uartfile, 0);
 	if (puart == MAP_FAILED)
@@ -336,6 +384,18 @@ void UARTExit()
         if(error == -1) printf("Failed to close UART device");
         else printf("UART device closed.\n");
         uartinit=false;
+}
+
+unsigned char UARTRawVal(char port)
+{
+    if(uartinit)
+    {
+        if(port <= S4)
+        {
+            return (unsigned char)puart->Raw[port][puart->Actual[port]][0];
+        }
+    }
+    else SensorDevInitErr();
 }
 
 void I2CInit()
@@ -371,184 +431,52 @@ void I2CExit()
         uartinit=false;
 }
 
-void SetSensorTouch(char port)
-{
-    if(analoginit)
-    {
-        switch(port)
-        {
-            case S1:
-                psensor1 = (unsigned char*)&(panalog->Pin1[port][panalog->Actual[port]]);
-                break;
-            case S2:
-                psensor2 = (unsigned char*)&(panalog->Pin1[port][panalog->Actual[port]]);
-                break;
-            case S3:
-                psensor3 = (unsigned char*)&(panalog->Pin1[port][panalog->Actual[port]]);
-                break;
-            case S4:
-                psensor4 = (unsigned char*)&(panalog->Pin1[port][panalog->Actual[port]]);
-                break;
-            default:
-                printf("No valid port number! (%d)\n", port);
-                break;
-        }
-    }
-    else SensorDevInitErr();
-}
-
-void SetSensorGyro(char port)
-{
-    if(uartinit)
-    {
-        switch(port)
-        {
-            case S1:
-                psensor1 = (unsigned char*)&(puart->Raw[port][puart->Actual[port]][0]);
-                break;
-            case S2:
-                psensor2 = (unsigned char*)&(puart->Raw[port][puart->Actual[port]][0]);
-                break;
-            case S3:
-                psensor3 = (unsigned char*)&(puart->Raw[port][puart->Actual[port]][0]);
-                break;
-            case S4:
-                psensor4 = (unsigned char*)&(puart->Raw[port][puart->Actual[port]][0]);
-                break;
-            default:
-                printf("No valid port number! (%d)\n", port);
-                break;
-        }
-    }
-    else SensorDevInitErr();
-}
-
-void SetSensorUS(char port)
-{
-    if(uartinit)
-    {
-        switch(port)
-        {
-            case S1:
-                psensor1 = (unsigned char*)&(puart->Raw[port][puart->Actual[port]][0]);
-                break;
-            case S2:
-                psensor2 = (unsigned char*)&(puart->Raw[port][puart->Actual[port]][0]);
-                break;
-            case S3:
-                psensor3 = (unsigned char*)&(puart->Raw[port][puart->Actual[port]][0]);
-                break;
-            case S4:
-                psensor4 = (unsigned char*)&(puart->Raw[port][puart->Actual[port]][0]);
-                break;
-            default:
-                printf("No valid port number! (%d)\n", port);
-                break;
-        }
-    }
-    else SensorDevInitErr();
-}
-
-void SetSensorColour(char port)
-{
-    if(uartinit)
-    {
-        switch(port)
-        {
-            case S1:
-                psensor1 = (unsigned char*)&(puart->Raw[port][puart->Actual[port]][0]);
-                break;
-            case S2:
-                psensor2 = (unsigned char*)&(puart->Raw[port][puart->Actual[port]][0]);
-                break;
-            case S3:
-                psensor3 = (unsigned char*)&(puart->Raw[port][puart->Actual[port]][0]);
-                break;
-            case S4:
-                psensor4 = (unsigned char*)&(puart->Raw[port][puart->Actual[port]][0]);
-                break;
-            default:
-                printf("No valid port number! (%d)\n", port);
-                break;
-        }
-    }
-    else SensorDevInitErr();
-}
-
-void SetSensorNXTTouch(char port)
-{
-    if(analoginit)
-    {
-        switch(port)
-        {
-            case S1:
-                psensor1 = (unsigned char*)&(panalog->Pin1[port][panalog->Actual[port]]);
-                break;
-            case S2:
-                psensor2 = (unsigned char*)&(panalog->Pin1[port][panalog->Actual[port]]);
-                break;
-            case S3:
-                psensor3 = (unsigned char*)&(panalog->Pin1[port][panalog->Actual[port]]);
-                break;
-            case S4:
-                psensor4 = (unsigned char*)&(panalog->Pin1[port][panalog->Actual[port]]);
-                break;
-            default:
-                printf("No valid port number! (%d)\n", port);
-                break;
-        }
-    }
-    else SensorDevInitErr();
-}
-
-void SetSensorNXTUS(char port)
+unsigned char I2CRawVal(char port)
 {
     if(i2cinit)
     {
-        switch(port)
+        if(port <= S4)
         {
-            case S1:
-                psensor1 = (unsigned char*)&(pi2c->Raw[port][puart->Actual[port]][0]);
-                break;
-            case S2:
-                psensor2 = (unsigned char*)&(pi2c->Raw[port][puart->Actual[port]][0]);
-                break;
-            case S3:
-                psensor3 = (unsigned char*)&(pi2c->Raw[port][puart->Actual[port]][0]);
-                break;
-            case S4:
-                psensor4 = (unsigned char*)&(pi2c->Raw[port][puart->Actual[port]][0]);
-                break;
-            default:
-                printf("No valid port number! (%d)\n", port);
-                break;
+            return (unsigned char)pi2c->Raw[port][pi2c->Actual[port]][0];
         }
     }
     else SensorDevInitErr();
 }
 
-void SetSensorNXTLight(char port)                                               //NXT light sensor, EV3 only has coloursensor
+void AssignSensorFunc(char port, unsigned char (*sensorfunc)(char))
 {
-    if(analoginit)
+    if(analoginit && uartinit && i2cinit)
     {
         switch(port)
         {
             case S1:
-                psensor1 = (unsigned char*)&(panalog->Pin1[port][panalog->Actual[port]]);
+                Sensor1Func = sensorfunc;
                 break;
             case S2:
-                psensor2 = (unsigned char*)&(panalog->Pin1[port][panalog->Actual[port]]);
+                Sensor2Func = sensorfunc;
                 break;
             case S3:
-                psensor3 = (unsigned char*)&(panalog->Pin1[port][panalog->Actual[port]]);
+                Sensor3Func = sensorfunc;
                 break;
             case S4:
-                psensor4 = (unsigned char*)&(panalog->Pin1[port][panalog->Actual[port]]);
+                Sensor4Func = sensorfunc;
                 break;
             default:
                 printf("No valid port number! (%d)\n", port);
-                break;
         }
+    }
+    else SensorDevInitErr();
+}
+
+void SetColourSensorMode(char port, char mode)
+{
+    DEVCON devcon;
+    if(uartinit)
+    {
+        devcon.Connection[port] = CONN_INPUT_UART;
+        devcon.Type[port] = 29; //Type no. of colour sensor
+        devcon.Mode[port] = mode;
+        //ioctl(uartfile, (UART_SET_CONN), &devcon); //Compile Error :(
     }
     else SensorDevInitErr();
 }
