@@ -93,6 +93,74 @@ typedef unsigned char byte;
 #define OUTPUT_DBCA 0x0F
 #define OUTPUT_DCAB 0x0F
 #define OUTPUT_DCBA 0x0F
+
+#define OUT_A 0x01
+#define OUT_B 0x02
+#define OUT_C 0x04
+#define OUT_D 0x08
+
+#define OUT_AB 0x03
+#define OUT_BA 0x05
+
+#define OUT_AC 0x05
+#define OUT_CA 0x05
+
+#define OUT_AD 0x09
+#define OUT_DA 0x09
+
+#define OUT_ABC 0x07
+#define OUT_ACB 0x07
+#define OUT_BAC 0x07
+#define OUT_BCA 0x07
+#define OUT_CAB 0x07
+#define OUT_CBA 0x07
+
+#define OUT_BCD 0x0E
+#define OUT_BDC 0x0E
+#define OUT_CBD 0x0E
+#define OUT_CDB 0x0E
+#define OUT_DBC 0x0E
+#define OUT_DCB 0x0E
+
+#define OUT_ACD 0x0D
+#define OUT_ADC 0x0D
+#define OUT_CAD 0x0D
+#define OUT_CDA 0x0D
+#define OUT_DAC 0x0D
+#define OUT_DCA 0x0D
+
+#define OUT_ABD 0x0B
+#define OUT_ADB 0x0B
+#define OUT_BAD 0x0B
+#define OUT_BDA 0x0B
+#define OUT_DAB 0x0B
+#define OUT_DBA 0x0B
+
+#define OUT_ALL 0x0F
+#define OUT_ABCD 0x0F
+#define OUT_ABDC 0x0F
+#define OUT_ACBD 0x0F
+#define OUT_ACDB 0x0F
+#define OUT_ADBC 0x0F
+#define OUT_ADCB 0x0F
+#define OUT_BACD 0x0F
+#define OUT_BADC 0x0F
+#define OUT_BCAD 0x0F
+#define OUT_BCDA 0x0F
+#define OUT_BDAC 0x0F
+#define OUT_BDCA 0x0F
+#define OUT_CABD 0x0F
+#define OUT_CADB 0x0F
+#define OUT_CBAD 0x0F
+#define OUT_CBDA 0x0F
+#define OUT_CDAB 0x0F
+#define OUT_CDBA 0x0F
+#define OUT_DABC 0x0F
+#define OUT_DACB 0x0F
+#define OUT_DBAC 0x0F
+#define OUT_DBCA 0x0F
+#define OUT_DCAB 0x0F
+#define OUT_DCBA 0x0F
 //</editor-fold>
 //</editor-fold>
 
