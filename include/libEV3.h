@@ -197,13 +197,13 @@ extern unsigned char (*Sensor2Func)(char port);
 extern unsigned char (*Sensor3Func)(char port);
 extern unsigned char (*Sensor4Func)(char port);
 
-#define SetSensorTouch(port)
-#define SetSensorColour(port)
-#define SetSensorUS(port)
-#define SetSensorGyro(port)
-#define SetSensorNXTTouch(port)
-#define SetSensorNXTLight(port)
-#define SetSensorNXTUS(port)
+#define SetSensorTouch(port) AssignSensorFunc(port, Pin6RawVal)
+#define SetSensorColour(port) AssignSensorFunc(port, UARTRawVal)
+#define SetSensorUS(port) AssignSensorFunc(port, UARTRawVal)
+#define SetSensorGyro(port) AssignSensorFunc(port, UARTRawVal)
+#define SetSensorNXTTouch(port) AssignSensorFunc(port, Pin1RawVal)
+#define SetSensorNXTLight(port) AssignSensorFunc(port, Pin1RawVal)
+#define SetSensorNXTUS(port) AssignSensorFunc(port, I2CRawVal)
 //</editor-fold>
 
 //LCD stuffs
@@ -244,12 +244,18 @@ extern "C" {
     void ClearTacho(char outputs);
     void AnalogInit();
     void AnalogExit();
+    unsigned char Pin1RawVal(char port);
+    unsigned char Pin6RawVal(char port);
     void UARTInit();
     void UARTExit();
+    unsigned char UARTRawVal(char port);
     void I2CInit();
     void I2CExit();
+    unsigned char I2CRawVal(char port);
     void UIInit();
     void UIExit();
+    void AssignSensorFunc(char port, unsigned char (*sensorfunc)(char));
+    void SetColourSensorMode(char port, char mode);
     char UpButtonState();
     char EnterButtonState();
     char DownButtonState();
