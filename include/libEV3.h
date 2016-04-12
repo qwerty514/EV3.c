@@ -220,7 +220,7 @@ extern UI *pui;
 //Time
 //<editor-fold>
 #include <time.h>
-#define Wait(time) nanosleep(0, (time*1000000))
+#define Wait(time) nanosleep(&(struct timespec){(time_t)(time/1000), (long)((time % 1000) * 1000000)}, NULL) //Will this work? Not sure, but no errors yet!
 //</editor-fold>
 //
 //Functions
