@@ -75,12 +75,12 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libev3-c.a: ${OBJECTFILES}
 ${OBJECTDIR}/lib/d_lcd.o: lib/d_lcd.c 
 	${MKDIR} -p ${OBJECTDIR}/lib
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -Iinclude -Ilib -Ires -Isrc -I. -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/lib/d_lcd.o lib/d_lcd.c
+	$(COMPILE.c) -O2 -Iinclude -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/lib/d_lcd.o lib/d_lcd.c
 
 ${OBJECTDIR}/src/libEV3.o: src/libEV3.c 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -Iinclude -Ilib -Ires -Isrc -I. -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/libEV3.o src/libEV3.c
+	$(COMPILE.c) -O2 -Iinclude -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/libEV3.o src/libEV3.c
 
 # Subprojects
 .build-subprojects:
@@ -95,7 +95,7 @@ ${TESTDIR}/TestFiles/f2: ${TESTDIR}/tests/SensorTest.o ${OBJECTFILES:%.o=%_nomai
 ${TESTDIR}/tests/SensorTest.o: tests/SensorTest.c 
 	${MKDIR} -p ${TESTDIR}/tests
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -Iinclude -Ilib -Ires -Isrc -I. -I. -I. -I. -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/SensorTest.o tests/SensorTest.c
+	$(COMPILE.c) -O2 -Iinclude -I. -I. -I. -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/SensorTest.o tests/SensorTest.c
 
 
 ${OBJECTDIR}/lib/d_lcd_nomain.o: ${OBJECTDIR}/lib/d_lcd.o lib/d_lcd.c 
@@ -106,7 +106,7 @@ ${OBJECTDIR}/lib/d_lcd_nomain.o: ${OBJECTDIR}/lib/d_lcd.o lib/d_lcd.c
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.c) -O2 -Iinclude -Ilib -Ires -Isrc -I. -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/lib/d_lcd_nomain.o lib/d_lcd.c;\
+	    $(COMPILE.c) -O2 -Iinclude -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/lib/d_lcd_nomain.o lib/d_lcd.c;\
 	else  \
 	    ${CP} ${OBJECTDIR}/lib/d_lcd.o ${OBJECTDIR}/lib/d_lcd_nomain.o;\
 	fi
@@ -119,7 +119,7 @@ ${OBJECTDIR}/src/libEV3_nomain.o: ${OBJECTDIR}/src/libEV3.o src/libEV3.c
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.c) -O2 -Iinclude -Ilib -Ires -Isrc -I. -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/libEV3_nomain.o src/libEV3.c;\
+	    $(COMPILE.c) -O2 -Iinclude -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/libEV3_nomain.o src/libEV3.c;\
 	else  \
 	    ${CP} ${OBJECTDIR}/src/libEV3.o ${OBJECTDIR}/src/libEV3_nomain.o;\
 	fi

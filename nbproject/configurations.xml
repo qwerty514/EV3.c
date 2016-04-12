@@ -50,6 +50,8 @@
   </logicalFolder>
   <sourceRootList>
     <Elem>res</Elem>
+    <Elem>lib</Elem>
+    <Elem>src</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -63,9 +65,6 @@
         <cTool>
           <incDir>
             <pElem>include</pElem>
-            <pElem>lib</pElem>
-            <pElem>res</pElem>
-            <pElem>src</pElem>
           </incDir>
           <commandLine>-pthread</commandLine>
           <preprocessorList>
@@ -82,21 +81,6 @@
           <ranlibTool>arm-none-linux-gnueabi-ranlib</ranlibTool>
         </archiverTool>
       </compileType>
-      <folder path="TestFiles/f1">
-        <cTool>
-          <incDir>
-            <pElem>.</pElem>
-          </incDir>
-        </cTool>
-        <ccTool>
-          <incDir>
-            <pElem>.</pElem>
-          </incDir>
-        </ccTool>
-        <linkerTool>
-          <output>${TESTDIR}/TestFiles/program</output>
-        </linkerTool>
-      </folder>
       <folder path="TestFiles/f2">
         <cTool>
           <incDir>
@@ -164,9 +148,6 @@
           <developmentMode>5</developmentMode>
           <incDir>
             <pElem>include</pElem>
-            <pElem>lib</pElem>
-            <pElem>res</pElem>
-            <pElem>src</pElem>
           </incDir>
           <commandLine>-pthread</commandLine>
         </cTool>
@@ -184,21 +165,6 @@
           <ranlibTool>arm-none-linux-gnueabi-ranlib</ranlibTool>
         </archiverTool>
       </compileType>
-      <folder path="TestFiles/f1">
-        <cTool>
-          <incDir>
-            <pElem>.</pElem>
-          </incDir>
-        </cTool>
-        <ccTool>
-          <incDir>
-            <pElem>.</pElem>
-          </incDir>
-        </ccTool>
-        <linkerTool>
-          <output>${TESTDIR}/TestFiles/program</output>
-        </linkerTool>
-      </folder>
       <folder path="TestFiles/f2">
         <cTool>
           <incDir>
