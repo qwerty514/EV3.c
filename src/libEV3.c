@@ -5,14 +5,16 @@
  * Created on 27 mei 2015, 22:39
  */
 
-#include <fcntl.h>
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
-#include <sys/mman.h>
-#include <pthread.h>
 #include <time.h>
+#include <pthread.h>
+#include <fcntl.h>
+#include <sys/mman.h>
+#include <sys/ioctl.h>
 #include "libEV3.h"
 #include "d_lcd.h"
 
@@ -476,7 +478,8 @@ void SetColourSensorMode(char port, char mode)
         devcon.Connection[port] = CONN_INPUT_UART;
         devcon.Type[port] = 29; //Type no. of colour sensor
         devcon.Mode[port] = mode;
-        //ioctl(uartfile, (UART_SET_CONN), &devcon); //Compile Error :(
+        ioctl(uartfile, UART_SET_CONN, &devcon);
+        //Compile Error -> No more! :D (forgot to include sys/ioctl.h #epicfail)
     }
     else SensorDevInitErr();
 }
