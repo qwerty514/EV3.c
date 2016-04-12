@@ -5,7 +5,6 @@
  * Created on 27 mei 2015, 22:39
  */
 
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
@@ -624,6 +623,28 @@ void TextNumOut(int x, int y, char str[100], int num, char fieldwidth)
 }
 //</editor-fold>
 
+//Time stuffs
+//<editor-fold>
+/*What names should I use? One for absolute time, the other relative to the last reset*/
+struct timespec t0;
+
+unsigned long CurrentTick()
+{
+    struct timespec time;
+    clock_gettime(CLOCK_MONOTONIC, &time);
+    return ((time.tv_sec - t0.tv_sec) * 1000 + (time.tv_nsec - t0.tv_nsec) / 1000000);
+}
+
+/*
+unsigned long CurrentTick()
+{
+    struct timespec time;
+    clock_gettime(CLOCK_MONOTONIC, &time);
+    return ((time.tv_sec) * 1000 + (time.tv_nsec) / 1000000);
+}
+*/
+//</editor-fold>
+
 //Global stuffs
 void *ExitChecker(void *threadmain)
 {
@@ -657,6 +678,7 @@ void EV3Init()
     pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
     pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
     pthread_create(&threadbackground, NULL, ExitChecker, (void*)threadmain);
+    ClearTick();
 }
 
 void EV3Exit()

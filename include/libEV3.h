@@ -217,12 +217,14 @@ extern char lcdupdate;
 extern UI *pui;
 //</editor-fold>
 
-//Time
+//Time stuffs
 //<editor-fold>
 #include <time.h>
+extern struct timespec t0;
 #define Wait(time) nanosleep(&(struct timespec){(time_t)(time/1000), (long)((time % 1000) * 1000000)}, NULL) //Will this work? Not sure, but no errors yet!
+#define ClearTick() clock_gettime(CLOCK_MONOTONIC, &t0)
 //</editor-fold>
-//
+
 //Functions
 //<editor-fold>
 #ifdef	__cplusplus
@@ -262,6 +264,7 @@ extern "C" {
     char RightButtonState();
     char LeftButtonState();
     char BackButtonState();
+    unsigned long CurrentTick();
     void *ExitChecker(void *threadmain);
     void EV3Init();
     void EV3Exit();
