@@ -65,8 +65,9 @@
         <cTool>
           <incDir>
             <pElem>include</pElem>
+            <pElem>res</pElem>
           </incDir>
-          <commandLine>-pthread</commandLine>
+          <commandLine>-pthread -lrt</commandLine>
           <preprocessorList>
             <Elem>DEBUG</Elem>
           </preprocessorList>
@@ -82,20 +83,6 @@
         </archiverTool>
       </compileType>
       <folder path="TestFiles/f2">
-        <cTool>
-          <incDir>
-            <pElem>.</pElem>
-            <pElem>.</pElem>
-            <pElem>.</pElem>
-          </incDir>
-        </cTool>
-        <ccTool>
-          <incDir>
-            <pElem>.</pElem>
-            <pElem>.</pElem>
-            <pElem>.</pElem>
-          </incDir>
-        </ccTool>
         <linkerTool>
           <output>${TESTDIR}/TestFiles/program</output>
         </linkerTool>
@@ -148,8 +135,12 @@
           <developmentMode>5</developmentMode>
           <incDir>
             <pElem>include</pElem>
+            <pElem>res</pElem>
           </incDir>
-          <commandLine>-pthread</commandLine>
+          <commandLine>-pthread -lrt</commandLine>
+          <preprocessorList>
+            <Elem>RELEASE</Elem>
+          </preprocessorList>
         </cTool>
         <ccTool>
           <developmentMode>5</developmentMode>

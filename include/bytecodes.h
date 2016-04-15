@@ -1463,15 +1463,15 @@ COLOR;
 /* Color sensor as color detector                */
 typedef   enum
 {
-  //NOCOLOR      = 0,
+  NOCOLOR      = 0,
   BLACKCOLOR   = 1,
   BLUECOLOR    = 2,
   GREENCOLOR   = 3,
   YELLOWCOLOR  = 4,
   REDCOLOR     = 5,
-  WHITECOLOR   = 6
-  //WHITECOLOR   = 6,
-  //BROWNCOLOR   = 7
+  //WHITECOLOR   = 6
+  WHITECOLOR   = 6,
+  BROWNCOLOR   = 7
 }
 NXTCOLOR;
 

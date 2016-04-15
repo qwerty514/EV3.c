@@ -9,8 +9,10 @@
 #define	EV3LIB_H
 
 #include "lms2012.h"
+#include <time.h>
 
 typedef unsigned char byte;
+typedef void* task;
 
 //Motor stuffs
 //<editor-fold>
@@ -184,26 +186,44 @@ extern int tachofile;
 
 //Sensor-stuffs
 //<editor-fold>
-#define SENSOR_1 Sensor1Func(S1)
-#define SENSOR_2 Sensor2Func(S2)
-#define SENSOR_3 Sensor3Func(S3)
-#define SENSOR_4 Sensor4Func(S4)
+//#define OLDSENSORIMPL
+
 #define S1 0x00
 #define S2 0x01
 #define S3 0x02
 #define S4 0x03
-extern unsigned char (*Sensor1Func)(char port);
-extern unsigned char (*Sensor2Func)(char port);
-extern unsigned char (*Sensor3Func)(char port);
-extern unsigned char (*Sensor4Func)(char port);
+#define SENSORPORTS 4
 
-#define SetSensorTouch(port) AssignSensorFunc(port, Pin6RawVal)
-#define SetSensorColour(port) AssignSensorFunc(port, UARTRawVal)
-#define SetSensorUS(port) AssignSensorFunc(port, UARTRawVal)
-#define SetSensorGyro(port) AssignSensorFunc(port, UARTRawVal)
-#define SetSensorNXTTouch(port) AssignSensorFunc(port, Pin1RawVal)
-#define SetSensorNXTLight(port) AssignSensorFunc(port, Pin1RawVal)
-#define SetSensorNXTUS(port) AssignSensorFunc(port, I2CRawVal)
+#ifdef OLDSENSORIMPL
+#define SENSOR_1 Sensor1Func(S1)
+#define SENSOR_2 Sensor2Func(S2)
+#define SENSOR_3 Sensor3Func(S3)
+#define SENSOR_4 Sensor4Func(S4)
+#else
+#define SENSOR_1 SensorValFunc[S1](S1)
+#define SENSOR_2 SensorValFunc[S2](S2)
+#define SENSOR_3 SensorValFunc[S3](S3)
+#define SENSOR_4 SensorValFunc[S4](S4)
+#endif
+
+#ifdef OLDSENSORIMPL
+extern int (*Sensor1Func)(char port);
+extern int (*Sensor2Func)(char port);
+extern int (*Sensor3Func)(char port);
+extern int (*Sensor4Func)(char port);
+#else
+extern int (*SensorValFunc[SENSORPORTS])(char port);
+#endif
+
+extern char sensordatasize[SENSORPORTS];
+
+#define SetSensorTouch(port) AssignSensorFunc(port, Pin6RawVal, DATA_16)
+#define SetSensorColour(port) AssignSensorFunc(port, UARTRawVal, DATA_8)
+#define SetSensorUS(port) AssignSensorFunc(port, UARTRawVal, DATA_16)
+#define SetSensorGyro(port) AssignSensorFunc(port, UARTRawVal, DATA_16)
+#define SetSensorNXTTouch(port) AssignSensorFunc(port, Pin1RawVal, DATA_16)
+#define SetSensorNXTLight(port) AssignSensorFunc(port, Pin1RawVal, DATA_16)
+#define SetSensorNXTUS(port) AssignSensorFunc(port, I2CRawVal, DATA_16)
 //</editor-fold>
 
 //LCD stuffs
@@ -246,17 +266,17 @@ extern "C" {
     void ClearTacho(char outputs);
     void AnalogInit();
     void AnalogExit();
-    unsigned char Pin1RawVal(char port);
-    unsigned char Pin6RawVal(char port);
+    int Pin1RawVal(char port);
+    int Pin6RawVal(char port);
     void UARTInit();
     void UARTExit();
-    unsigned char UARTRawVal(char port);
+    int UARTRawVal(char port);
     void I2CInit();
     void I2CExit();
-    unsigned char I2CRawVal(char port);
+    int I2CRawVal(char port);
     void UIInit();
     void UIExit();
-    void AssignSensorFunc(char port, unsigned char (*sensorfunc)(char));
+    void AssignSensorFunc(char port, int (*sensorfunc)(char), char datasize);
     void SetColourSensorMode(char port, char mode);
     char UpButtonState();
     char EnterButtonState();

@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <unistd.h>
 #include <string.h>
 #include <time.h>
 #include <pthread.h>
@@ -250,10 +251,15 @@ void ClearTacho(char outputs)
 
 //Sensor stuffs
 //<editor-fold>
-unsigned char (*Sensor1Func)(char);
-unsigned char (*Sensor2Func)(char);
-unsigned char (*Sensor3Func)(char);
-unsigned char (*Sensor4Func)(char);
+#ifdef OLDSENSORIMPL
+int (*Sensor1Func)(char);
+int (*Sensor2Func)(char);
+int (*Sensor3Func)(char);
+int (*Sensor4Func)(char);
+#else
+int (*SensorValFunc[SENSORPORTS])(char port);
+#endif
+char sensordatasize[SENSORPORTS] = {DATA_8, DATA_8, DATA_8, DATA_8};
 int analogfile;
 int uartfile;
 int i2cfile;
@@ -330,25 +336,25 @@ void AnalogExit()
     }
 }
 
-unsigned char Pin1RawVal(char port)
+int Pin1RawVal(char port)
 {
     if(analoginit)
     {
         if(port <= S4)
         {
-            return (unsigned char)(panalog->Pin1[port][panalog->Actual[port]]);
+            return (panalog->Pin1[port][panalog->Actual[port]]);
         }
     }
     else SensorDevInitErr();
 }
 
-unsigned char Pin6RawVal(char port)
+int Pin6RawVal(char port)
 {
     if(analoginit)
     {
         if(port <= S4)
         {
-            return (unsigned char)(panalog->Pin1[port][panalog->Actual[port]]);
+            return (panalog->Pin6[port][panalog->Actual[port]]);
         }
     }
     else SensorDevInitErr();
@@ -387,13 +393,24 @@ void UARTExit()
         uartinit=false;
 }
 
-unsigned char UARTRawVal(char port)
+int UARTRawVal(char port)
 {
     if(uartinit)
     {
         if(port <= S4)
         {
-            return (unsigned char)puart->Raw[port][puart->Actual[port]][0];
+            switch(sensordatasize[port])
+            {
+                case DATA_8:
+                    return (int)*(char*)puart->Raw[port][puart->Actual[port]];
+                    break;
+                case DATA_16:
+                    return (int)*(short*)puart->Raw[port][puart->Actual[port]];
+                    break;
+                case DATA_32:
+                    return (int)*(int*)puart->Raw[port][puart->Actual[port]];
+                    break;
+            }
         }
     }
     else SensorDevInitErr();
@@ -432,22 +449,34 @@ void I2CExit()
         uartinit=false;
 }
 
-unsigned char I2CRawVal(char port)
+int I2CRawVal(char port)
 {
     if(i2cinit)
     {
         if(port <= S4)
         {
-            return (unsigned char)pi2c->Raw[port][pi2c->Actual[port]][0];
+            switch(sensordatasize[port])
+            {
+                case DATA_8:
+                    return (int)*(char*)pi2c->Raw[port][pi2c->Actual[port]];
+                    break;
+                case DATA_16:
+                    return (int)*(short*)pi2c->Raw[port][pi2c->Actual[port]];
+                    break;
+                case DATA_32:
+                    return (int)*(int*)pi2c->Raw[port][pi2c->Actual[port]];
+                    break;
+            }
         }
     }
     else SensorDevInitErr();
 }
 
-void AssignSensorFunc(char port, unsigned char (*sensorfunc)(char))
+void AssignSensorFunc(char port, int (*sensorfunc)(char), char datasize)
 {
     if(analoginit && uartinit && i2cinit)
     {
+        #ifdef OLDSENSORIMPL
         switch(port)
         {
             case S1:
@@ -464,7 +493,13 @@ void AssignSensorFunc(char port, unsigned char (*sensorfunc)(char))
                 break;
             default:
                 printf("No valid port number! (%d)\n", port);
+                return;
         }
+        #else
+        if(port <= S4) SensorValFunc[port] = sensorfunc;
+        else printf("No valid port number! (%d)\n", port);
+        #endif
+        sensordatasize[port] = datasize;
     }
     else SensorDevInitErr();
 }
@@ -478,6 +513,8 @@ void SetColourSensorMode(char port, char mode)
         devcon.Type[port] = 29; //Type no. of colour sensor
         devcon.Mode[port] = mode;
         ioctl(uartfile, UART_SET_CONN, &devcon);
+        if(mode <= COLOUR) sensordatasize[port] = DATA_8;
+        else sensordatasize[port] = DATA_16;
         //Compile Error -> No more! :D (forgot to include sys/ioctl.h #epicfail)
     }
     else SensorDevInitErr();
@@ -604,21 +641,27 @@ void TextOut(int x, int y, char *str)
 
 void NumOut(int x, int y, int num, char fieldwidth)
 {
-    char str[fieldwidth+1];
-    char numberwidth = 0;
-    memset(str, ' ', fieldwidth);
-    str[fieldwidth] = '\0';
-    numberwidth += sprintf(str, "%d", num);
-    str[numberwidth] = ' ';
-    dLcdDrawText(lcd.Lcd, FG_COLOR, x, y, NORMAL_FONT, (signed char *)str);
+    char tmpstr[fieldwidth+1];
+    char charswritten = 0;
+    memset(tmpstr, ' ', fieldwidth);
+    tmpstr[fieldwidth] = '\0';
+    charswritten += snprintf(tmpstr, fieldwidth+1, "%d", num);
+    if(charswritten < fieldwidth) tmpstr[charswritten] = ' ';
+    dLcdDrawText(lcd.Lcd, FG_COLOR, x, y, NORMAL_FONT, (signed char *)tmpstr);
     if(lcdupdate == false) dLcdUpdate(&lcd);
 }
 
-void TextNumOut(int x, int y, char str[100], int num, char fieldwidth)
+void TextNumOut(int x, int y, char *str, int num, char fieldwidth)
 {
-    memset(str+strlen(str), ' ', fieldwidth);
-    sprintf(str+strlen(str), "%d", num);
-    dLcdDrawText(lcd.Lcd, FG_COLOR, x, y, NORMAL_FONT, (signed char *)str);
+    char tmpstr[fieldwidth + 1];
+    char charswritten = 0;
+    charswritten += snprintf(tmpstr, fieldwidth+1 , "%s%d", str, num);
+    if(charswritten < fieldwidth)
+    {
+        memset(tmpstr + charswritten, ' ', fieldwidth - charswritten);
+        tmpstr[fieldwidth] = '\0';
+    }
+    dLcdDrawText(lcd.Lcd, FG_COLOR, x, y, NORMAL_FONT, (signed char *)tmpstr);
     if(lcdupdate == false) dLcdUpdate(&lcd);
 }
 //</editor-fold>
@@ -648,7 +691,7 @@ unsigned long CurrentTick()
 //Global stuffs
 void *ExitChecker(void *threadmain)
 {
-    const struct timespec pollsleep = {0, 100000000L};
+    const struct timespec pollsleep = {0, 200000000L};
     LCDClear(lcd.Lcd);
     dLcdDrawText(lcd.Lcd, FG_COLOR, 0, ((LCD_HEIGHT - dLcdGetFontHeight(LARGE_FONT)) / 2), LARGE_FONT, (signed char*)"Running...");
     dLcdDrawText(lcd.Lcd, FG_COLOR, 0, (LCD_HEIGHT - dLcdGetFontHeight(TINY_FONT) - 1), TINY_FONT, (signed char*)"Using EV3-C by qwerty514");
