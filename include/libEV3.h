@@ -8,8 +8,8 @@
 #ifndef EV3LIB_H
 #define	EV3LIB_H
 
-#include "lms2012.h"
 #include <time.h>
+#include "lms2012.h"
 
 typedef unsigned char byte;
 typedef void* task;
@@ -181,7 +181,6 @@ typedef void* task;
 #define MOTOR3SENSOR ptacho[2].TachoSensor
 #define MOTOR4SENSOR ptacho[3].TachoSensor
 extern MOTORDATA *ptacho;
-extern int tachofile;
 //</editor-fold>
 
 //Sensor-stuffs
@@ -215,8 +214,6 @@ extern int (*Sensor4Func)(char port);
 extern int (*SensorValFunc[SENSORPORTS])(char port);
 #endif
 
-extern char sensordatasize[SENSORPORTS];
-
 #define SetSensorTouch(port) AssignSensorFunc(port, Pin6RawVal, DATA_16)
 #define SetSensorColour(port) AssignSensorFunc(port, UARTRawVal, DATA_8)
 #define SetSensorUS(port) AssignSensorFunc(port, UARTRawVal, DATA_16)
@@ -224,6 +221,16 @@ extern char sensordatasize[SENSORPORTS];
 #define SetSensorNXTTouch(port) AssignSensorFunc(port, Pin1RawVal, DATA_16)
 #define SetSensorNXTLight(port) AssignSensorFunc(port, Pin1RawVal, DATA_16)
 #define SetSensorNXTUS(port) AssignSensorFunc(port, I2CRawVal, DATA_16)
+
+enum COLOURSENSORMODE
+{
+    REFLECTED,
+    AMBIENT,
+    COLOUR,
+    REFLECTEDRAW,
+    RGBRAW,
+    CALIBRATION
+};
 //</editor-fold>
 
 //LCD stuffs

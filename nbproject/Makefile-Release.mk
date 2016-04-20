@@ -44,7 +44,7 @@ TESTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}/tests
 
 # Test Files
 TESTFILES= \
-	${TESTDIR}/TestFiles/f2
+	${TESTDIR}/TestFiles/f1
 
 # C Compiler Flags
 CFLAGS=-pthread -lrt
@@ -75,27 +75,27 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libev3-c.a: ${OBJECTFILES}
 ${OBJECTDIR}/lib/d_lcd.o: lib/d_lcd.c 
 	${MKDIR} -p ${OBJECTDIR}/lib
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -DRELEASE -Iinclude -Ires -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/lib/d_lcd.o lib/d_lcd.c
+	$(COMPILE.c) -O2 -DRELEASE -Iinclude -Ires -I. -I. -I. -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/lib/d_lcd.o lib/d_lcd.c
 
 ${OBJECTDIR}/src/libEV3.o: src/libEV3.c 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -DRELEASE -Iinclude -Ires -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/libEV3.o src/libEV3.c
+	$(COMPILE.c) -O2 -DRELEASE -Iinclude -Ires -I. -I. -I. -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/libEV3.o src/libEV3.c
 
 # Subprojects
 .build-subprojects:
 
 # Build Test Targets
 .build-tests-conf: .build-conf ${TESTFILES}
-${TESTDIR}/TestFiles/f2: ${TESTDIR}/tests/SensorTest.o ${OBJECTFILES:%.o=%_nomain.o}
+${TESTDIR}/TestFiles/f1: ${TESTDIR}/res/tests/LineFollower.o ${OBJECTFILES:%.o=%_nomain.o}
 	${MKDIR} -p ${TESTDIR}/TestFiles
-	${LINK.c}   -o ${TESTDIR}/TestFiles/f2 $^ ${LDLIBSOPTIONS} 
+	${LINK.c}   -o ${TESTDIR}/TestFiles/f1 $^ ${LDLIBSOPTIONS} 
 
 
-${TESTDIR}/tests/SensorTest.o: tests/SensorTest.c 
-	${MKDIR} -p ${TESTDIR}/tests
+${TESTDIR}/res/tests/LineFollower.o: res/tests/LineFollower.c 
+	${MKDIR} -p ${TESTDIR}/res/tests
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -DRELEASE -Iinclude -Ires -I. -I. -I. -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/SensorTest.o tests/SensorTest.c
+	$(COMPILE.c) -O2 -DRELEASE -Iinclude -Ires -I. -I. -I. -I. -MMD -MP -MF "$@.d" -o ${TESTDIR}/res/tests/LineFollower.o res/tests/LineFollower.c
 
 
 ${OBJECTDIR}/lib/d_lcd_nomain.o: ${OBJECTDIR}/lib/d_lcd.o lib/d_lcd.c 
@@ -106,7 +106,7 @@ ${OBJECTDIR}/lib/d_lcd_nomain.o: ${OBJECTDIR}/lib/d_lcd.o lib/d_lcd.c
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.c) -O2 -DRELEASE -Iinclude -Ires -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/lib/d_lcd_nomain.o lib/d_lcd.c;\
+	    $(COMPILE.c) -O2 -DRELEASE -Iinclude -Ires -I. -I. -I. -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/lib/d_lcd_nomain.o lib/d_lcd.c;\
 	else  \
 	    ${CP} ${OBJECTDIR}/lib/d_lcd.o ${OBJECTDIR}/lib/d_lcd_nomain.o;\
 	fi
@@ -119,7 +119,7 @@ ${OBJECTDIR}/src/libEV3_nomain.o: ${OBJECTDIR}/src/libEV3.o src/libEV3.c
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.c) -O2 -DRELEASE -Iinclude -Ires -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/libEV3_nomain.o src/libEV3.c;\
+	    $(COMPILE.c) -O2 -DRELEASE -Iinclude -Ires -I. -I. -I. -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/libEV3_nomain.o src/libEV3.c;\
 	else  \
 	    ${CP} ${OBJECTDIR}/src/libEV3.o ${OBJECTDIR}/src/libEV3_nomain.o;\
 	fi
@@ -128,7 +128,7 @@ ${OBJECTDIR}/src/libEV3_nomain.o: ${OBJECTDIR}/src/libEV3.o src/libEV3.c
 .test-conf:
 	@if [ "${TEST}" = "" ]; \
 	then  \
-	    ${TESTDIR}/TestFiles/f2 || true; \
+	    ${TESTDIR}/TestFiles/f1 || true; \
 	else  \
 	    ./${TEST} || true; \
 	fi

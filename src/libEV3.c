@@ -270,16 +270,6 @@ char analoginit = false;
 char uartinit = false;
 char i2cinit = false;
 
-enum COLOURSENSORMODE
-{
-    REFLECTED,
-    AMBIENT,
-    COLOUR,
-    REFLECTEDRAW,
-    RGBRAW,
-    CALIBRATION
-};
-
 /* //Using modified enum NXTCOLOR in bytecodes.h
 enum COLOURS
 {

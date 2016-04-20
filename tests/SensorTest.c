@@ -16,6 +16,9 @@ task main(int argc, char** argv)
     SetSensorColour(S2);
     SetSensorColour(S3);
     SetSensorUS(S4);
+    //SetSensorNXTUS(S4);
+    //SetSensorNXTLight(S4);
+    //SetColourSensorMode(S2, REFLECTED);
     while(1)
     {
         
