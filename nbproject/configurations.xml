@@ -38,7 +38,7 @@
                      displayName="Line Follower"
                      projectFiles="true"
                      kind="TEST">
-        <itemPath>res/tests/LineFollower.c</itemPath>
+        <itemPath>tests/LineFollower.c</itemPath>
       </logicalFolder>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
@@ -117,11 +117,11 @@
       </item>
       <item path="res/small_icons.xbm" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="res/tests/LineFollower.c" ex="false" tool="0" flavor2="0">
-      </item>
       <item path="res/tiny_font.xbm" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/libEV3.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="tests/LineFollower.c" ex="false" tool="0" flavor2="0">
       </item>
     </conf>
     <conf name="Release" type="3">
@@ -209,11 +209,11 @@
       </item>
       <item path="res/small_icons.xbm" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="res/tests/LineFollower.c" ex="false" tool="0" flavor2="0">
-      </item>
       <item path="res/tiny_font.xbm" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/libEV3.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="tests/LineFollower.c" ex="false" tool="0" flavor2="0">
       </item>
     </conf>
   </confs>

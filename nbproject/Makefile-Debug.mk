@@ -87,15 +87,15 @@ ${OBJECTDIR}/src/libEV3.o: src/libEV3.c
 
 # Build Test Targets
 .build-tests-conf: .build-conf ${TESTFILES}
-${TESTDIR}/TestFiles/program: ${TESTDIR}/res/tests/LineFollower.o ${OBJECTFILES:%.o=%_nomain.o}
+${TESTDIR}/TestFiles/program: ${TESTDIR}/tests/LineFollower.o ${OBJECTFILES:%.o=%_nomain.o}
 	${MKDIR} -p ${TESTDIR}/TestFiles
 	${LINK.c}   -o ${TESTDIR}/TestFiles/program $^ ${LDLIBSOPTIONS} 
 
 
-${TESTDIR}/res/tests/LineFollower.o: res/tests/LineFollower.c 
-	${MKDIR} -p ${TESTDIR}/res/tests
+${TESTDIR}/tests/LineFollower.o: tests/LineFollower.c 
+	${MKDIR} -p ${TESTDIR}/tests
 	${RM} "$@.d"
-	$(COMPILE.c) -g -DDEBUG -Iinclude -Ires -MMD -MP -MF "$@.d" -o ${TESTDIR}/res/tests/LineFollower.o res/tests/LineFollower.c
+	$(COMPILE.c) -g -DDEBUG -Iinclude -Ires -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/LineFollower.o tests/LineFollower.c
 
 
 ${OBJECTDIR}/lib/d_lcd_nomain.o: ${OBJECTDIR}/lib/d_lcd.o lib/d_lcd.c 
