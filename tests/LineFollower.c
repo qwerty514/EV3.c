@@ -73,6 +73,7 @@ task main(int argc, char** argv)
             OnFwd(OUT_D, -50);
         }
         else OnFwd(OUT_AD, 80);
+        Wait(50);
     }
     
     //Vind het blikje
