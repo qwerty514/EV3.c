@@ -122,8 +122,8 @@ void WaitForMotor(char outputs) //Will not work, replace with opOutput_Test with
 
 void OnFwd(char outputs, char power)
 {
-    if(power > 100) power = 100;
-    if(power < -100) power = -100;
+    //if(power > 100) power = 100;
+    //if(power < -100) power = -100;
     if(pwminit)
     {
         motorcommand[0] = opOUTPUT_POWER;
@@ -139,8 +139,8 @@ void OnFwd(char outputs, char power)
 
 void OnFwdSpeed(char outputs, char speed)
 {
-    if(speed > 100) speed = 100;
-    if(speed < -100) speed = -100;
+    //if(speed > 100) speed = 100;
+    //if(speed < -100) speed = -100;
     if(pwminit)
     {
         motorcommand[0] = opOUTPUT_SPEED;
@@ -156,8 +156,8 @@ void OnFwdSpeed(char outputs, char speed)
 
 void OnFwdSync(char outputs, char speed, short turn)
 {
-    if(speed > 100) speed = 100;
-    if(speed < -100) speed = -100;
+    //if(speed > 100) speed = 100;
+    //if(speed < -100) speed = -100;
     if(pwminit)
     {
         motorcommand[0] = opOUTPUT_TIME_SYNC;
@@ -681,11 +681,7 @@ unsigned long CurrentTick()
 //Global stuffs
 void *ExitChecker(void *threadmain)
 {
-    const struct timespec pollsleep = {0, 200000000L};
-    LCDClear(lcd.Lcd);
-    dLcdDrawText(lcd.Lcd, FG_COLOR, 0, ((LCD_HEIGHT - dLcdGetFontHeight(LARGE_FONT)) / 2), LARGE_FONT, (signed char*)"Running...");
-    dLcdDrawText(lcd.Lcd, FG_COLOR, 0, (LCD_HEIGHT - dLcdGetFontHeight(TINY_FONT) - 1), TINY_FONT, (signed char*)"Using EV3-C by qwerty514");
-    dLcdUpdate(&lcd);
+    const struct timespec pollsleep = {0, 100000000L};
     while(true)
     {
         if(BackButtonState() == true)
@@ -706,6 +702,10 @@ void EV3Init()
     I2CInit();
     dLcdInit(lcd.Lcd);
     UIInit();
+    LCDClear(lcd.Lcd);
+    dLcdDrawText(lcd.Lcd, FG_COLOR, 0, (LCD_HEIGHT - dLcdGetFontHeight(LARGE_FONT) - dLcdGetFontHeight(TINY_FONT) - 2), LARGE_FONT, (signed char*)"Running...");
+    dLcdDrawText(lcd.Lcd, FG_COLOR, 0, (LCD_HEIGHT - dLcdGetFontHeight(TINY_FONT) - 1), TINY_FONT, (signed char*)"Using EV3-C by qwerty514");
+    dLcdUpdate(&lcd);
     pthread_t threadbackground;
     pthread_t threadmain = pthread_self();
     pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);

@@ -193,26 +193,12 @@ extern MOTORDATA *ptacho;
 #define S4 0x03
 #define SENSORPORTS 4
 
-#ifdef OLDSENSORIMPL
-#define SENSOR_1 Sensor1Func(S1)
-#define SENSOR_2 Sensor2Func(S2)
-#define SENSOR_3 Sensor3Func(S3)
-#define SENSOR_4 Sensor4Func(S4)
-#else
 #define SENSOR_1 SensorValFunc[S1](S1)
 #define SENSOR_2 SensorValFunc[S2](S2)
 #define SENSOR_3 SensorValFunc[S3](S3)
 #define SENSOR_4 SensorValFunc[S4](S4)
-#endif
 
-#ifdef OLDSENSORIMPL
-extern int (*Sensor1Func)(char port);
-extern int (*Sensor2Func)(char port);
-extern int (*Sensor3Func)(char port);
-extern int (*Sensor4Func)(char port);
-#else
 extern int (*SensorValFunc[SENSORPORTS])(char port);
-#endif
 
 #define SetSensorTouch(port) AssignSensorFunc(port, Pin6RawVal, DATA_16)
 #define SetSensorColour(port) AssignSensorFunc(port, UARTRawVal, DATA_8)
@@ -237,11 +223,28 @@ enum COLOURSENSORMODE
 //<editor-fold>
 extern LCD lcd;
 extern char lcdupdate;
+#define LCD_LINE1 0
+#define LCD_LINE2 10
+#define LCD_LINE3 20
+#define LCD_LINE4 30
+#define LCD_LINE5 40
+#define LCD_LINE6 50
+#define LCD_LINE7 60
+#define LCD_LINE8 70
+#define LCD_LINE9 80
+#define LCD_LINE10 90
+#define LCD_LINE11 100
+#define LCD_LINE12 110
+#define LCD_COLUMN_LEFT 0
+#define LCD_COLUMN_RIGHT 88
+#define FIELD_WIDTH_EOL 22
+
+//</editor-fold>
 
 //Button stuffs
+//<editor-fold>
 #define PRESSED 1
 #define NOTPRESSED 0
-extern UI *pui;
 //</editor-fold>
 
 //Time stuffs

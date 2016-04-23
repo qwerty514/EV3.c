@@ -22,10 +22,10 @@ task main(int argc, char** argv)
     while(1)
     {
         
-        TextNumOut(0, dLcdGetFontHeight(NORMAL_FONT) * 0, "Tch : ", SENSOR_1, 15);
-        TextNumOut(0, dLcdGetFontHeight(NORMAL_FONT) * 1, "LCol: ", SENSOR_2, 15);
-        TextNumOut(0, dLcdGetFontHeight(NORMAL_FONT) * 2, "RCol: ", SENSOR_3, 15);
-        TextNumOut(0, dLcdGetFontHeight(NORMAL_FONT) * 3, "US  : ", SENSOR_4, 15);
+        TextNumOut(0, LCD_LINE1, "Tch : ", SENSOR_1, 15);
+        TextNumOut(0, LCD_LINE2, "LCol: ", SENSOR_2, 15);
+        TextNumOut(0, LCD_LINE3, "RCol: ", SENSOR_3, 15);
+        TextNumOut(0, LCD_LINE4, "US  : ", SENSOR_4, 15);
         //usleep(10000);
     }
     EV3Exit();
